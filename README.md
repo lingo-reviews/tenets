@@ -4,7 +4,7 @@
 
 Thank you for testing lingo in it's infancy. Please open an issue for any bugs or feature requests.
 
-This is Alpha. The libs are woefully under unit tested and have more todos than comments. There will be bugs. At this early stage, we are interested in your assesment of lingo's usefullness and potential.
+This is Alpha. The libs are woefully under unit tested and have more TODOs than comments. There will be bugs. At this early stage, we are interested in your assessment of lingo's usefulness and potential.
 
 Okay, with that out of the way, let's get started.
 
@@ -19,7 +19,7 @@ If you have Docker installed, try the following:
 mv ./lingo ~/path/to/bin
 
 # Find some source code to review.
-cd tenets/go/license/example
+cd go/tenets/license/example
 
 # Review the code.
 lingo review
@@ -36,7 +36,7 @@ When lingo reviews, it looks for a .lingo file in the current or parent director
 This time, let's start without a .lingo:
 
 ```bash
-cd tenets/go/simpleseed/example
+cd go/tenets/simpleseed/example
 
 # This will write a .lingo file.
 lingo init
@@ -59,13 +59,13 @@ lingo review --output-format --json-pretty
 
 ```
 
-Notes: A better tenet search UI is in the pipeline and tenets can be pulled from any docker repository.
+Notes: Tenets can be pulled from any docker repository. A better tenet search UI is in the pipeline.
 
 Have a play. You'll see lingo prompts you to open the issue. Supported editors are: vi, vim, emacs, nano and subl.
 
 ### Binary Quick Start
 
-Let's build a tenet from source. The following is a fully functional tenet. You'll find it in tenets/go/simpleseed. 
+Let's build a tenet from source. The following is a fully functional tenet. You'll find it in go/tenets/simpleseed. 
 
 
 ```go
@@ -75,8 +75,8 @@ package main
 import (
 	"go/ast"
 
-	"github.com/lingo-reviews/tenets/go/dev/server"
-	"github.com/lingo-reviews/tenets/go/dev/tenet"
+	"github.com/lingo-reviews/go/tenets/dev/server"
+	"github.com/lingo-reviews/go/tenets/dev/tenet"
 )
 
 type commentTenet struct {
@@ -108,7 +108,7 @@ func main() {
 To build:
 
 ```bash
-cd tenets/go/simpleseed
+cd go/tenets/simpleseed
 lingo build
 ```
 You'll see the following output:
@@ -119,7 +119,7 @@ Success! All binary tenets built.
 
 ```
 
-You can now add simpleseed to any project. Beacuse it's not docker, we need to specify the driver when we add it:
+You can now add simpleseed to any project. Because it's not docker, we need to specify the driver when we add it:
 
 ```bash
 lingo add lingoreviews/simpleseed --driver binary
@@ -140,12 +140,12 @@ name = "simpleseed"
 
 By default, binary tenets are installed in /home/you/.lingo_home/tenets/[owner]/[name]. This can be overridden with the LINGO_BIN environment variable.
 
-You'll note .lingofile sets docker build to false. If you remove that and run build again, lingo will build both a docker image and a binary. Until github.com/lingo-reviews/tenets/go/dev is published, you'll have to manually check this out before building a docker image.
+You'll note .lingofile sets docker build to false. If you remove that and run build again, lingo will build both a docker image and a binary. Until github.com/lingo-reviews/go/tenets/dev is published, you'll have to manually check this out before building a docker image.
 
 As you'll likely be writing and updating lots of tenets (we hope!), lingo build provides a --all flag. Try it out:
 
 ```bash
-cd tenets/go
+cd go/tenets
 
 lingo build --all
 ```
@@ -154,7 +154,7 @@ This looks for all .lingofiles under the current directory and attempts to build
 
 ## Options
 
-Some tenets take options. To view their avaliable options run:
+Some tenets take options. To view their available options run:
 
 ```bash
 lingo info
@@ -180,7 +180,7 @@ Commands and some arguments will now autocomplete, in particular installed binar
 
 ### Writing a Tenet
 
-The `go/tenets` directory has a varity of examples of tenets in Go. Copy one of those to get started. Other languages are possible. All tenets talk to lingo via the API schema defined in api.proto. You can use api.proto to generate the API in one of 10 languages. Visit grpc.io to learn more.
+The `go/tenets` directory has a variety of examples of tenets in Go. Copy one of those to get started. Other languages are possible. All tenets talk to lingo via the API schema defined in api.proto. You can use api.proto to generate the API in one of 10 languages. Visit grpc.io to learn more.
 
 ## Hey! Where's my LAAS?
 
