@@ -15,9 +15,6 @@ Okay, with that out of the way, let's get started.
 If you have Docker installed, try the following:
 
 ```bash
-# Put lingo on your path.
-mv ./lingo ~/path/to/bin
-
 # Find some source code to review.
 cd go/tenets/license/example
 
@@ -30,7 +27,7 @@ lingo docs
 
 ```
 
-When lingo reviews, it looks for a .lingo file in the current or parent directories. If those tenets use a docker driver (default) and no local docker image is found, lingo goes and gets it. All config files are in toml. We will be supporting yaml and json also.
+When lingo reviews, it looks for a .lingo file in the current or parent directories. If those tenets use a docker driver (default) and no local docker image is found, lingo goes and gets it. All config files are in toml (we will be supporting yaml and json).
 
 
 This time, let's start without a .lingo:
@@ -61,7 +58,7 @@ lingo review --output-format --json-pretty
 
 Notes: Tenets can be pulled from any docker repository. A better tenet search UI is in the pipeline.
 
-Have a play. You'll see lingo prompts you to open the issue. Supported editors are: vi, vim, emacs, nano and subl.
+Have a play. You'll see lingo prompts you to open the issue. Supported editors are: vi, vim, emacs, nano and subl. If you want to skip the confirm steps, use --keep-all.
 
 ### Binary Quick Start
 
