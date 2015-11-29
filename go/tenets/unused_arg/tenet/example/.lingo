@@ -1,0 +1,14 @@
+cascade = true
+include = "*"
+template = ""
+
+[[tenet_group]]
+  name = "default"
+  template = ""
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/unused_arg"
+    driver = "docker"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]

@@ -1,0 +1,154 @@
+cascade = true
+include = "*"
+template = ""
+
+[[tenet_group]]
+  name = "Workers"
+  template = ""
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_tomb"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_single"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_simple"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_react"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_periodic"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_onetombdone"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_notombdead"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_nonakedchan"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_leakytomb"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_callback"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_tomb"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_single"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_simple"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_react"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_periodic"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_onetombdone"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_notombdead"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_nonakedchan"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_leakytomb"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_callback"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju/worker/juju_worker_nostate"
+    driver = "binary"
+    tag = ""
+    registry = ""
+    [tenet_group.tenet.options]

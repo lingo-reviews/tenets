@@ -1,0 +1,6 @@
+language = "go"
+owner = "lingoreviews"
+name = "juju_worker_nostate"
+
+[docker]
+  overwrite_dockerfile=true

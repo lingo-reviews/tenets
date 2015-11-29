@@ -1,0 +1,7 @@
+language = "go"
+owner = "lingoreviews"
+name = "simpleseed"
+
+[docker]
+  build=false
+  overwrite_dockerfile=true

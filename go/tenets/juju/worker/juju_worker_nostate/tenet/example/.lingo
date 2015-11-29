@@ -1,0 +1,14 @@
+cascade = true
+include = "*"
+template = ""
+
+[[tenet_group]]
+  name = "default"
+  template = ""
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/juju_worker_nostate"
+    driver = "docker"
+    registry = ""
+    tag = ""
+    [tenet_group.tenet.options]

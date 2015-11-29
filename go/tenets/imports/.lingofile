@@ -1,0 +1,6 @@
+language = "go"
+owner = "lingoreviews"
+name = "imports"
+
+[docker]
+  overwrite_dockerfile=true

@@ -1,0 +1,15 @@
+cascade = true
+include = "*"
+template = ""
+
+[[tenet_group]]
+  name = "default"
+  template = ""
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/imports"
+    driver = "binary"
+    registry = ""
+    tag = ""
+    [tenet_group.tenet.options]
+      blacklist_regex = ".*/state"
