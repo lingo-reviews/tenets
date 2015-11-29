@@ -177,7 +177,7 @@ Commands and some arguments will now autocomplete, in particular installed binar
 
 ### Writing a Tenet
 
-The `go/tenets` directory has a variety of examples of tenets in Go. Copy one of those to get started. Other languages are possible. All tenets talk to lingo via the API schema defined in api.proto. You can use api.proto to generate the API in one of 10 languages. Visit grpc.io to learn more.
+Start with go/dev/README.md. The `go/tenets` directory also has a variety of examples of tenets in Go. Copy one of those to get started.
 
 ## Hey! Where's my LAAS?
 
