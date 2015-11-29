@@ -1,4 +1,4 @@
-# Develop a Go Tenet
+# Write a Go Tenet!
 
 A tenet is a micro-service which talks to lingo over RPC. In this directory you'll find:
 
@@ -25,8 +25,6 @@ The tenet package is a helper library for writing a tenet. Here is the minimum c
 package main
 
 import (
-	"go/ast"
-
 	"github.com/lingo-reviews/tenets/go/dev/server"
 	"github.com/lingo-reviews/tenets/go/dev/tenet"
 )
@@ -47,7 +45,9 @@ t  := &tenet.Base{}
 		Usage:    "every comment should be awesome",
 		Language: "Go",
 		
-		// Tenets are about documenting rules as much as catching violations of them. This description gets composed with that of other tenets to document a package.
+		// Tenets are about documenting rules as much as catching violations
+		// of them. This description gets composed with that of other tenets
+		// to document a package.
 		Description: `
 simpleseed is a demonstration tenet showing the structure required
 to write a tenet in Go. When reviewing code with simpleseed it will be suggested
@@ -59,7 +59,7 @@ that all comments could be more awesome.
 server.Serve(t)
 ```
 
-Let's make it smell an AST node and raise an issue:
+Let's make it smell all comments in a go file:
 
 ```go
 t  := &tenet.Base{}
@@ -67,8 +67,8 @@ t  := &tenet.Base{}
  ...
 
 	// First register the issue that this tenet will look for. It returns the
-	// name of the issue which you'll use to raise the issue after smelling a
-	// node.
+	// name of the issue which you'll use to raise the issue after smelling
+	// the comment.
 	// You can register as many issues as you like.
 	issue := t.RegisterIssue("sucky_comment")
 
@@ -86,10 +86,10 @@ server.Serve(t)
 This will raise an issue for every non-awesome comment, with the default message "Issue Found". To set the message:
 
 ```go
-issue := t.RegisterIssue("sucky_comment", tenet.AddComment("this comment could be more awesome"))
+t.RegisterIssue("sucky_comment", tenet.AddComment("this comment could be more awesome"))
 ```
 
-What if we don't want to raise EVERY issue, but just enough to point out the problem?
+What if we don't want to raise every issue, but just enough to point out the problem?
 
 ```go
 
@@ -109,7 +109,8 @@ Let's set a variable in the comment:
 
 ```go
 issue := t.RegisterIssue("sucky_comment",
-		tenet.AddComment("comments really should be {{.myvar}}"
+		tenet.AddComment("comments really should be {{.myvar}}"),
+		)
 
 // then in our smell
 r.RaiseNodeIssue(issue, commentNode, tenet.CommentVar({{.myvar}}, "awesome"))
@@ -149,4 +150,4 @@ lingo review --tags style,someOtherTag --metrics-higher-than confidence=5 --metr
 
 This enables lingo to monitor a code base with fine grained control. You could, for example, encode the connascence princples (http://connascence.io).
 
-(NOTE: --tags and --metrics not available in closed Alpha)
+(NOTE: --tags and --metrics not available in closed Alpha. You can register them, but not review with them.)

@@ -14,4 +14,5 @@ lingo info <tenet-name>
 lingo add <tenet-name> [--driver|--options]
 ```
 
-Binary tenet names will auto-complete if you tab after lingo <cmd>.
+Binary tenet names will auto-complete if you tab after lingo `<cmd>`.
+(Note: you need to run `lingo --generate-bash-completion` first.)

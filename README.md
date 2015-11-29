@@ -175,10 +175,10 @@ lingo --generate-bash-completion
 Commands and some arguments will now autocomplete, in particular installed binary tenet names.
 
 
-### Writing a Tenet
+## Writing a Tenet
 
 Start with go/dev/README.md. The `go/tenets` directory also has a variety of examples of tenets in Go. Copy one of those to get started.
 
-## Hey! Where's my LAAS?
+### Hey! Where's my LAAS?
 
 We've recently refactored lingo and need to update Lingo as a Service to work with the new style tenets. Check back here for updates.
