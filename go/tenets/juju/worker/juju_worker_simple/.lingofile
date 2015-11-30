@@ -1,6 +1,8 @@
 language = "go"
 owner = "lingoreviews"
 name = "juju_worker_nonakedchan"
+registry = "hub.docker.com"
+
 
 [docker]
   overwrite_dockerfile=true

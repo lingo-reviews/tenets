@@ -12,3 +12,4 @@ template = ""
     registry = ""
     tag = ""
     [tenet_group.tenet.options]
+    	header="Mine! Copyright"
