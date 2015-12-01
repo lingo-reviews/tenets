@@ -187,6 +187,21 @@ func (l *lineVisitor) isSmellDone() bool {
 	return l.done
 }
 
+func lineInDiff(f BaseFile, lineNo int) bool {
+	diff := f.diff()
+	if len(diff) == 0 {
+		// Not doing a diff review on this file
+		return true
+	}
+	l64 := int64(lineNo)
+	for _, l := range diff {
+		if l64 == l {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *review) visitLines() {
 	b := r.baseTenet()
 	f := r.File()
@@ -194,6 +209,9 @@ func (r *review) visitLines() {
 
 	for _, v := range b.lineVisitors {
 		for i, line := range f.Lines() {
+			if !lineInDiff(f.(BaseFile), i+1) {
+				continue
+			}
 			if v.isSmellDoneWithFile(fName) || v.isSmellDone() || r.isFileDone(fName) {
 				break
 			}

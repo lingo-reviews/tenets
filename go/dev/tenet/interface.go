@@ -116,4 +116,5 @@ type BaseFile interface {
 	linePosition(line int) token.Position
 	posLine(p token.Pos) []byte
 	setLines([][]byte)
+	diff() []int64
 }

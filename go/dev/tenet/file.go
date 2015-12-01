@@ -41,6 +41,10 @@ func (f *gofile) Filename() string {
 	return f.filename
 }
 
+func (f *gofile) diff() []int64 {
+	return f.diffLines
+}
+
 func (f *gofile) linePosition(line int) token.Position {
 	return token.Position{
 		Filename: f.Filename(),
