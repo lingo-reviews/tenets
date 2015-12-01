@@ -126,7 +126,8 @@ Some tenets take options. To view their available options run:
 lingo info <tenet-name>
 ```
 
-The imports tenet, for example, takes a blacklist_regex option, here's an example of setting it:
+The imports tenet, for example, takes a blacklist_regex option, here's an
+example of setting it:
 
 ```bash
 lingo add lingoreviews/imports --options blacklist_regex=".*/State"
@@ -136,8 +137,9 @@ lingo add lingoreviews/imports --options blacklist_regex=".*/State"
 
 # Go
 
-Start [here](https://github.com/lingo-reviews/tenets/tree/master/go/dev). The `go/tenets` directory also has a variety of
-examples of tenets in Go. Copy `go/tenets/simpleseed` to get started.
+Start [here](https://github.com/lingo-reviews/tenets/tree/master/go/dev). The
+`go/tenets` directory also has a variety of examples of tenets in Go. Copy
+`go/tenets/simpleseed` to get started.
 
 # Other languages
 
@@ -148,6 +150,6 @@ and C#. Visit grpc.io to learn more.
 
 ## LAAS - Lingo As As Service
 
-Go to www.lingo.reviews/dashboard to hook lingo up your github repoistory. Add
-a .lingo files to your repoistory and the lingo bot will review every new pull
-request.
+Go to www.lingo.reviews/dashboard to hook lingo up to your github repoistory.
+Add .lingo files to your repoistory and the lingo bot will review every new
+pull request.
