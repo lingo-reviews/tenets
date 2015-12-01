@@ -14,13 +14,14 @@ import (
 
 	"text/template"
 
+	"github.com/lingo-reviews/tenets/go/dev/api"
 	"github.com/lingo-reviews/tenets/go/dev/tenet/log"
 )
 
 type review struct {
 	tenet   Tenet
 	waitc   chan struct{}
-	filesc  chan string
+	filesc  chan *api.File
 	issuesc chan *Issue
 
 	// file is the file currently under review.
@@ -56,12 +57,12 @@ func (r *review) StartReview() {
 		for {
 			select {
 			case file, ok := <-r.filesc:
-				if !ok && file == "" {
+				if !ok && file == nil {
 					log.Println("all files reviewed.")
 					return
 				}
 
-				f, err := buildFile(file, "", fset)
+				f, err := buildFile(file.Name, "", fset, file.Lines)
 				if err != nil {
 					log.Println("could not build file")
 					b.SendError(errors.Annotatef(err, "could not find file: %q", file))
@@ -79,7 +80,7 @@ func (r *review) StartReview() {
 	}()
 }
 
-func (r *review) SendFile(file string) {
+func (r *review) SendFile(file *api.File) {
 	r.filesc <- file
 }
 
@@ -186,6 +187,21 @@ func (l *lineVisitor) isSmellDone() bool {
 	return l.done
 }
 
+func lineInDiff(f BaseFile, lineNo int) bool {
+	diff := f.diff()
+	if len(diff) == 0 {
+		// Not doing a diff review on this file
+		return true
+	}
+	l64 := int64(lineNo)
+	for _, l := range diff {
+		if l64 == l {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *review) visitLines() {
 	b := r.baseTenet()
 	f := r.File()
@@ -193,6 +209,9 @@ func (r *review) visitLines() {
 
 	for _, v := range b.lineVisitors {
 		for i, line := range f.Lines() {
+			if !lineInDiff(f.(BaseFile), i+1) {
+				continue
+			}
 			if v.isSmellDoneWithFile(fName) || v.isSmellDone() || r.isFileDone(fName) {
 				break
 			}

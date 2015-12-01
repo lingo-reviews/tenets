@@ -59,7 +59,7 @@ func (s *server) Review(stream api.Tenet_ReviewServer) error {
 				return
 			}
 
-			r.SendFile(file.Name)
+			r.SendFile(file)
 		}
 	}()
 

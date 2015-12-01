@@ -54,7 +54,7 @@ func (b *Base) NewReview() *review {
 	r := &review{
 		tenet:       b,
 		issuesc:     make(chan *Issue),
-		filesc:      make(chan string),
+		filesc:      make(chan *api.File),
 		waitc:       make(chan struct{}),
 		fileDoneMap: map[string]bool{},
 	}
