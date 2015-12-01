@@ -136,7 +136,7 @@ lingo add lingoreviews/imports --options blacklist_regex=".*/State"
 
 # Go
 
-Start with go/dev/README.md. The `go/tenets` directory also has a variety of
+Start [here](https://github.com/lingo-reviews/tenets/tree/master/go/dev). The `go/tenets` directory also has a variety of
 examples of tenets in Go. Copy `go/tenets/simpleseed` to get started.
 
 # Other languages
