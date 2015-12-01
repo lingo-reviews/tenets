@@ -4,11 +4,11 @@
 
 Three packages are needed to run a Go tenet:
 
-## api
+### api
 
 A tenet is a micro-service which talks to lingo over RPC. The api package is the RPC API. This is the low level transport code generated from api.proto which enables lingo to talk to your tenet. As a tenet author, you can safely ignore it.
 
-## server
+### server
 
 There is only one method from the server package that you should need:
 
@@ -18,18 +18,18 @@ server.Serve(t tenet.Tenet)
 
 This should be called at the end of your main function. It takes a tenet object and serves it up as an RPC server that lingo can talk to.
 
-## tenet
+### tenet
 
 There are only three interfaces you'll use to write a tenet. You'll find these in tenet/interface.go:
 
-### tenet.Tenet
+#### tenet.Tenet
 Tenet defines what the tenet is about and sets up anything needed before a
 review.
 
-### tenet.Review
+#### tenet.Review
 // Review allows you to raise issues when smelling lines and nodes.
 
-### tenet.File
+#### tenet.File
 // File represents the current file being reviewed.
 
 ## Getting Started
