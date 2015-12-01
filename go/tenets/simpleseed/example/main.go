@@ -14,3 +14,8 @@ func b() {
 func c() {
 
 }
+
+// comment d
+func d() {
+
+}

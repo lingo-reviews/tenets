@@ -150,4 +150,4 @@ lingo review --tags style,someOtherTag --metrics-higher-than confidence=5 --metr
 
 This enables lingo to monitor a code base with fine grained control. You could, for example, encode the connascence princples (http://connascence.io).
 
-(NOTE: --tags and --metrics not available in closed Alpha. You can register them, but not review with them.)
+NOTE: In the closed Alpha you can register and raise metrics and tags - and they'll appear in the json output - but you cannot yet filter a review with them.
