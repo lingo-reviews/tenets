@@ -90,11 +90,11 @@ You'll see the following output:
 
 ```bash
 $ lingo build binary --all
-Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/juju_nosingle]
-Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/imports]
+Building Go binary: [~/.lingo_home/tenets/lingoreviews/juju_nosingle]
+Building Go binary: [~/.lingo_home/tenets/lingoreviews/imports]
 ...
-Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/unused_arg]
-Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/juju_worker_periodic]
+Building Go binary: [~/.lingo_home/tenets/lingoreviews/unused_arg]
+Building Go binary: [~/.lingo_home/tenets/lingoreviews/juju_worker_periodic]
 binary 17 / 17 [========================================================] 100.00 % 12s
 Success! All binary tenets built.
 ```
