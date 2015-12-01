@@ -2,7 +2,7 @@
 
 ## House keeping
 
-Welcome to the closed Alpha! The libs are woefully under unit tested and we have more TODOs than comments. There will be bugs. Please help us catch them and open an issue. We welcome feature requests and feedback on lingo's usefulness and potential.
+Welcome to the closed Alpha! There will be bugs. Please help us catch them and open an issue. We also welcome feature requests and feedback on lingo's usefulness and potential.
 
 Okay, with that out of the way, let's get started.
 

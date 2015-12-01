@@ -19,7 +19,20 @@ This should be called at the end of your main function. It takes a tenet object 
 
 ### tenet/
 
-The tenet package is a helper library for writing a tenet. Here is the minimum code to get a tenet running:
+There are only three interfaces you'll use to write a tenet. You'll find these in tenet/interface.go:
+
+## Tenet
+Tenet defines what the tenet is about and sets up anything needed before a
+review. Tenet should never be called inside SmellNode and SmellLine.
+
+## Review
+// Review allows you to raise issues when smelling lines and nodes.
+
+## File
+// File represents the current file being reviewed.
+
+
+Here is the minimum code to get a tenet running:
 
 ```go
 package main
@@ -151,3 +164,4 @@ lingo review --tags style,someOtherTag --metrics-higher-than confidence=5 --metr
 This enables lingo to monitor a code base with fine grained control. You could, for example, encode the connascence princples (http://connascence.io).
 
 NOTE: In the closed Alpha you can register and raise metrics and tags - and they'll appear in the json output - but you cannot yet filter a review with them.
+
