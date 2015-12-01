@@ -143,7 +143,7 @@ issue := t.RegisterIssue("sucky_comment",
 		)
 
 // then in our smell
-r.RaiseNodeIssue(issue, commentNode, tenet.CommentVar({{.myvar}}, "awesome"))
+r.RaiseNodeIssue(issue, commentNode, tenet.CommentVar("myvar", "awesome"))
 
 ```
 
@@ -154,14 +154,14 @@ To get that variable from the user:
 	commentType := t.RegisterOption("comment_type", "awesome", "set the type of comment")
 
 	// then in our smell
-	r.RaiseNodeIssue(issue, commentNode, tenet.CommentVar({{.myvar}}, *commentType))	
+	r.RaiseNodeIssue(issue, commentNode, tenet.CommentVar("myvar", *commentType))	
 
 ```
 
 When the user runs `lingo info <tenet>` they'll see "comment_type" as an
-option they can set. t.RegisterOption returns a pointer to a string. The value
-of that pointer is updated with the user's setting by the time it is used in
-the smell.
+option they can set. t.RegisterOption returns a pointer to a string with a
+default value, in the case above it's "awesome". The value is updated with the
+user's setting by the time it is used in the smell.
 
 Register custom metrics an tags to manage the applicability of tenets:
 
