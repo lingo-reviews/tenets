@@ -8,7 +8,7 @@ template = ""
 
   [[tenet_group.tenet]]
     name = "lingoreviews/license"
-    driver = "binary"
+    driver = "docker"
     registry = ""
     tag = ""
     [tenet_group.tenet.options]

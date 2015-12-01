@@ -25,7 +25,7 @@ that all comments could be more awesome.
 `,
 	})
 
-	issue := c.RegisterIssue("sucky_comment", tenet.AddComment("this comment could be more awesome", tenet.FirstComment))
+	issue := c.RegisterIssue("sucky_comment", tenet.AddComment("this comment could be more awesome"))
 	c.SmellNode(func(r tenet.Review, comment *ast.Comment) error {
 		if comment.Text != "// most awesome comment ever" {
 			r.RaiseNodeIssue(issue, comment)

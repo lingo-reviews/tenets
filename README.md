@@ -24,7 +24,7 @@ lingo docs
 
 ```
 
-When lingo reviews, it looks for a .lingo file in the current or parent directories. If those tenets use a docker driver (default) and no local docker image is found, lingo goes and gets it. All config files are in toml (we will be supporting yaml and json).
+When lingo reviews, it looks for a .lingo file in the current or parent directories. If those tenets use a docker driver (default) and no local docker image is found, lingo goes and gets it. The first time you pull a docker tenet, it will pull the tenet base images. This means future tenet pulls will be much quicker.
 
 
 This time, let's start without a .lingo:
@@ -57,8 +57,29 @@ Have a play. You'll see lingo prompts you to open the issue. Supported editors a
 
 ### Binary Quick Start
 
-Let's build a tenet from source. The following is a fully functional tenet. You'll find it in go/tenets/simpleseed. 
+All the other example folders under go/tenets use the binary driver. To build them all at once, cd into the root of go/tenets and run:
 
+```bash
+lingo build binary --all
+```
+
+You'll see the following output:
+
+```bash
+$ lingo build binary --all
+Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/juju_nosingle]
+Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/imports]
+...
+Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/unused_arg]
+Building Go binary: [/home/jesse/.lingo_home/tenets/lingoreviews/juju_worker_periodic]
+binary 17 / 17 [==============================================================================================================] 100.00 % 12s
+Success! All binary tenets built.
+```
+
+Now, cd into any example folder and run `lingo review`. In a similar fashion, you can `lingo build docker --all` to build local copies of all the docker tenets.
+
+
+The following is a fully functional tenet. You'll find it in go/tenets/simpleseed. 
 
 ```go
 
@@ -97,21 +118,7 @@ func main() {
 
 ```
 
-To build:
-
-```bash
-cd go/tenets/simpleseed
-lingo build
-```
-You'll see the following output:
-```bash
-Building Go binary: [/home/you/.lingo_home/tenets/lingoreviews/simpleseed]
-binary 1 / 1 [===============================================] 100.00 % 1s
-Success! All binary tenets built.
-
-```
-
-You can now add simpleseed to any project. Because it's not docker, we need to specify the driver when we add it:
+To build, cd into go/tenets/simpleseed and run `lingo build`. You can now add simpleseed to any project. Because it's not docker, we need to specify the driver when we add it:
 
 ```bash
 lingo add lingoreviews/simpleseed --driver binary
