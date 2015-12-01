@@ -58,7 +58,7 @@ lingo init
 # List avaliable tenets on hub.docker.com:
 docker search lingoreviews
 
-# Add the license example:
+# Add the simpleseed example:
 lingo add lingoreviews/simpleseed
 
 # Pull down the images from hub.docker.com:
@@ -99,10 +99,10 @@ binary 17 / 17 [========================================================] 100.00
 Success! All binary tenets built.
 ```
 
-`cd into any example folder and run lingo review. In a similar fashion, you
-`can lingo build docker --all to build local copies of all the docker
-`tenets.To add the binary drivers, we need to specify the driver when we add
-`it:
+`cd` into any example folder and run `lingo review`. In a similar fashion, you
+can `lingo build docker --all` to build local copies of all the docker
+tenets.To add the binary drivers, we need to specify the driver when we add
+it:
 
 ```bash
 lingo add lingoreviews/simpleseed --driver binary
