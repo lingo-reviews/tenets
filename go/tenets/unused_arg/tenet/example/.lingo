@@ -8,7 +8,7 @@ template = ""
 
   [[tenet_group.tenet]]
     name = "lingoreviews/unused_arg"
-    driver = "docker"
+    driver = "binary"
     tag = ""
     registry = ""
     [tenet_group.tenet.options]

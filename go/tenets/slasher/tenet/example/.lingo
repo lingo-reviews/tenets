@@ -8,7 +8,7 @@ template = ""
 
   [[tenet_group.tenet]]
     name = "lingoreviews/slasher"
-    driver = "docker"
+    driver = "binary"
     registry = "hub.docker.com"
     tag = ""
     [tenet_group.tenet.options]
