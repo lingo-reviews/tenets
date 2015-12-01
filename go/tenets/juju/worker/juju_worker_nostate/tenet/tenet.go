@@ -13,6 +13,7 @@ type noStateTenet struct {
 	maybeIssue      string
 	mostLikelyIssue string
 	confidence      func(interface{}) tenet.RaiseIssueOption
+	observability   tenet.RaiseIssueOption
 }
 
 func New() *noStateTenet {
@@ -27,7 +28,7 @@ func New() *noStateTenet {
 
 	// We register any issues, metrics and tags that we'll be using.
 	t.confidence = t.RegisterMetric("confidence")
-	t.RegisterTag("observablity")
+	t.observability = t.RegisterTag("observability")
 
 	t.maybeIssue = t.RegisterIssue("imports_state_returns_worker",
 		tenet.AddComment(`
@@ -104,7 +105,7 @@ func (t *noStateTenet) smellFuncs() {
 							t.maybeIssue,
 							fnc,
 							t.confidence(0.3),
-							tenet.AddTag("observability"),
+							t.observability,
 						)
 
 						// No need to keep checking as we've found our issue for this func.
@@ -120,8 +121,7 @@ func (t *noStateTenet) smellFuncs() {
 			t.mostLikelyIssue,
 			fnc,
 			t.confidence(0.8),
-			// same as: tenet.SetMetric("confidence", 0.8),
-			tenet.AddTag("observability"),
+			t.observability,
 		)
 
 		return nil

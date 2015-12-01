@@ -132,28 +132,6 @@ func AddComment(comment string, ctx ...CommentContext) RegisterIssueOption {
 	}
 }
 
-func SetMetric(key string, val interface{}) RaiseIssueOption {
-
-	// TODO(waigani) DEMOWARE seriously! This just sets confidence. Fix this ASAP.
-
-	return func(issue *Issue) {
-		// assert that metric is registered
-		// add metric to issue.Metrics.(map[string]interface{})
-
-		// TODO(waigani) PREALPHA fix this.
-	}
-
-}
-
-func AddTag(tag string) RaiseIssueOption {
-
-	// TODO(waigani) DEMOWARE implement this.
-
-	return func(issue *Issue) {
-		// issue.Tags = append(issue.Tags, tag)
-	}
-}
-
 type option struct {
 	name  string
 	value *string
@@ -189,17 +167,27 @@ func (b *Base) RegisterOption(name string, value string, usage string) *string {
 
 // RegisterMetric registers a metric key name that can be used when raising an issue.
 func (b *Base) RegisterMetric(key string) func(val interface{}) RaiseIssueOption {
-	// TODO(waigani) DEMOWARE implement this.
+	b.info.metrics = append(b.info.metrics, key)
+
 	return func(val interface{}) RaiseIssueOption {
-		return SetMetric(key, val)
+		return func(issue *Issue) {
+
+			if issue.Metrics == nil {
+				issue.Metrics = map[string]interface{}{}
+			}
+
+			issue.Metrics[key] = val
+		}
 	}
 }
 
 // RegisterTag registers a tag name that can be used when registering an issue.
 func (b *Base) RegisterTag(tag string) RaiseIssueOption {
-	// TODO(waigani) DEMOWARE implement this.
+	b.info.tags = append(b.info.tags, tag)
 
-	return AddTag(tag)
+	return func(issue *Issue) {
+		issue.Tags = append(issue.Tags, tag)
+	}
 }
 
 func (b *Base) RegisterIssue(issueName string, opts ...RegisterIssueOption) string {
