@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/lingo-reviews/tenets/go/dev/server"
-	"github.com/lingo-reviews/tenets/go/tenets/juju_nosingle/tenet"
+	"github.com/lingo-reviews/tenets/go/tenets/juju/juju_nosingle/tenet"
 )
 
 func main() {

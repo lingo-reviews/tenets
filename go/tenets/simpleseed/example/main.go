@@ -15,7 +15,7 @@ func c() {
 
 }
 
-// comment d
+//comment d
 func d() {
 
 }

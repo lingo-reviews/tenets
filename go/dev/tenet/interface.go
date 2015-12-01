@@ -108,7 +108,7 @@ type BaseReview interface {
 	Close()
 
 	// Send files to a review.
-	SendFile(string)
+	SendFile(*api.File)
 
 	// Call this when you've finished sending all the files to review.
 	EndReview()

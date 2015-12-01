@@ -84,7 +84,6 @@ func (b *Base) Errors() chan error {
 }
 
 func (b *Base) SmellNode(f smellNodeFunc) Tenet {
-
 	b.astVisitors = append(b.astVisitors, astVisitor{
 		smellNode: f,
 		fileDone:  map[string]bool{},

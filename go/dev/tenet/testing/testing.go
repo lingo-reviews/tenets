@@ -134,7 +134,8 @@ func (s *TenetSuite) sendFiles(files ...string) {
 		br := s.baseReview()
 		defer br.EndReview()
 		for _, f := range files {
-			br.SendFile(f)
+
+			br.SendFile(&api.File{Name: f})
 		}
 	}()
 }

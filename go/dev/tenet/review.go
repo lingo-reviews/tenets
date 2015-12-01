@@ -120,10 +120,8 @@ func (r *review) check(f File) error {
 	r.fileDone = func() {
 		r.fileDoneMap[f.Filename()] = true
 	}
-
 	// first walk all ast nodes.
 	if len(b.astVisitors) > 0 {
-		log.Println("visiting node")
 		v := r.getVisitor()
 		ast.Walk(v, f.AST())
 	}
@@ -187,15 +185,9 @@ func (l *lineVisitor) isSmellDone() bool {
 	return l.done
 }
 
-func lineInDiff(f BaseFile, lineNo int) bool {
-	diff := f.diff()
-	if len(diff) == 0 {
-		// Not doing a diff review on this file
-		return true
-	}
-	l64 := int64(lineNo)
+func lineInDiff(diff []int64, lineNo int64) bool {
 	for _, l := range diff {
-		if l64 == l {
+		if lineNo == l {
 			return true
 		}
 	}
@@ -209,9 +201,12 @@ func (r *review) visitLines() {
 
 	for _, v := range b.lineVisitors {
 		for i, line := range f.Lines() {
-			if !lineInDiff(f.(BaseFile), i+1) {
+
+			diff := f.(BaseFile).diff()
+			if len(diff) > 0 && !lineInDiff(diff, int64(i+1)) {
 				continue
 			}
+
 			if v.isSmellDoneWithFile(fName) || v.isSmellDone() || r.isFileDone(fName) {
 				break
 			}
@@ -253,7 +248,9 @@ func (r *review) getVisitor() *astVisitor {
 	v := &astVisitor{fileDone: map[string]bool{}}
 	v.visit = func(node ast.Node) (w ast.Visitor) {
 		visitors := b.astVisitors
-		fName := r.File().Filename()
+		file := r.File()
+		fName := file.Filename()
+
 		// Stop walking the AST tree if we don't have any visitors or this
 		// tenet is done reviewing this file.
 		if len(visitors) == 0 || r.isFileDone(fName) {
@@ -275,6 +272,10 @@ func (r *review) getVisitor() *astVisitor {
 			// If the type of node ast.Walk is visiting matches the type of node
 			// in the astVisitor func, call the func with the node.
 			if obtainedType == expectedType {
+
+				if !nodeInDiff(file.(BaseFile), node) {
+					return
+				}
 
 				// set review funcs
 				r.smellDoneWithFile = func() {
@@ -311,19 +312,33 @@ func (r *review) getVisitor() *astVisitor {
 	return v
 }
 
-// --- tenet author methods ---
+func nodeInDiff(f BaseFile, node ast.Node) bool {
+	start := f.(*gofile).fset.Position(node.Pos())
+	end := f.(*gofile).fset.Position(node.End())
+
+	diff := f.diff()
+	if len(diff) == 0 {
+		// skip diff check
+		return true
+	}
+
+	for i := start.Line; i <= end.Line; i++ {
+		if lineInDiff(diff, int64(start.Line)) {
+			return true
+		}
+	}
+
+	return false
+}
 
 func (r *review) File() File {
 	return r.file
 }
 
-// AddNodeIssue sets the position of the issue from the start and end positon
-// of the node.
 func (r *review) RaiseNodeIssue(issueName string, n ast.Node, opts ...RaiseIssueOption) Review {
 	return r.raiseIssue(issueName, r.File().(BaseFile).newIssueRangeFromNode(n), opts)
 }
 
-// AddNodeIssue sets the position of the issue from the start and end positon.
 func (r *review) RaiseLineIssue(issueName string, start, end int, opts ...RaiseIssueOption) Review {
 	return r.raiseIssue(issueName, r.File().(BaseFile).newIssueRange(start, end), opts)
 }
