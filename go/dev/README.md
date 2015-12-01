@@ -6,31 +6,42 @@ Three packages are needed to run a Go tenet:
 
 ### api
 
-A tenet is a micro-service which talks to lingo over RPC. The api package is the RPC API. This is the low level transport code generated from api.proto which enables lingo to talk to your tenet. As a tenet author, you can safely ignore it.
+A tenet is a micro-service which talks to lingo over RPC. The api package is
+the RPC API. This is the low level transport code generated from api.proto
+which enables lingo to talk to the tenet. As a tenet author, you can safely
+ignore it.
 
 ### server
 
-There is only one method from the server package that you should need:
+The server package takes a tenet object and serves it up as an RPC server that
+lingo can talk to. There is only one method from the server package that you
+should need:
 
 ```go
 server.Serve(t tenet.Tenet)
 ```
 
-This should be called at the end of your main function. It takes a tenet object and serves it up as an RPC server that lingo can talk to.
+This should be called at the end of your main function.
 
 ### tenet
 
-There are only three interfaces you'll use to write a tenet. You'll find these in tenet/interface.go:
+The tenet package is used to write the tenet. It has three interfaces
+(tenet/interface.go):
 
 #### tenet.Tenet
+
 Tenet defines what the tenet is about and sets up anything needed before a
-review.
+review. It also starts the source code smelling with tenet.SmellNode and
+tenet.SmellLine.
 
 #### tenet.Review
-// Review allows you to raise issues when smelling lines and nodes.
+
+Review raises issues. It should only be used inside a function passed to
+tenet.SmellNode or tenet.SmellLine.
 
 #### tenet.File
-// File represents the current file being reviewed.
+
+File represents the current file being reviewed.
 
 ## Getting Started
 
@@ -49,7 +60,8 @@ server.Serve(&tenet.Base{})
 }
 ```
 
-You could build and add this tenet to lingo, but it would do nothing. First, define what this tenet's all about:
+You could build and add this tenet to lingo, but it would do nothing. First,
+define what this tenet's all about:
 
 ```go
 t  := &tenet.Base{}
@@ -98,7 +110,8 @@ t  := &tenet.Base{}
 server.Serve(t)
 ```
 
-This will raise an issue for every non-awesome comment, with the default message "Issue Found". To set the message:
+This will raise an issue for every non-awesome comment, with the default
+message "Issue Found". To set the message:
 
 ```go
 t.RegisterIssue("sucky_comment", tenet.AddComment("this comment could be more awesome"))
@@ -118,7 +131,9 @@ issue := t.RegisterIssue("sucky_comment",
 
 ```
 
-The first time the issue is seen, lingo will comment "comments really should be awesome". Then, once every time the issue is found in a file, lingo will comment "the comment in this file should also be more awesome".
+The first time the issue is seen, lingo will comment "comments really should
+be awesome". Then, once every time the issue is found in a file, lingo will
+comment "the comment in this file should also be more awesome".
 
 To set a variable in the comment:
 
@@ -143,7 +158,10 @@ To get that variable from the user:
 
 ```
 
-When the user runs `lingo info <tenet>` they'll see "comment_type" as an option they can set. t.RegisterOption returns a pointer to a string. The value of that pointer is updated with the user's setting by the time it is used in the smell.
+When the user runs `lingo info <tenet>` they'll see "comment_type" as an
+option they can set. t.RegisterOption returns a pointer to a string. The value
+of that pointer is updated with the user's setting by the time it is used in
+the smell.
 
 Register custom metrics an tags to manage the applicability of tenets:
 
@@ -156,19 +174,24 @@ Register custom metrics an tags to manage the applicability of tenets:
 
 ```
 
-Now the issue has been raised with a confidence score of 8 and a tag of "style". To use these when reviewing:
+Now the issue has been raised with a confidence score of 8 and a tag of
+"style". To use these when reviewing:
 
 ```bash
 lingo review --tags style,someOtherTag --metrics-higher-than confidence=5 --metrics-lower-than confidence=9
 ```
 
-This enables lingo to monitor a code base with fine grained control. You could, for example, encode the connascence princples (http://connascence.io).
+This enables lingo to monitor a code base with fine grained control. You
+could, for example, encode the connascence princples (http://connascence.io).
 
-NOTE: In the closed Alpha you can register and raise metrics and tags - and they'll appear in the json output - but you cannot yet filter a review with them.
+NOTE: In the closed Alpha you can register and raise metrics and tags - and
+they'll appear in the json output - but you cannot yet filter a review with
+them.
 
 ## Building
 
-`lingo build` looks for a .lingofile for instructions on how to build the tenet. This is the simpleseed .lingofile:
+`lingo build looks for a .lingofile for instructions on how to build the
+`tenet. This is the simpleseed .lingofile:
 
 ```toml
 language = "go"
@@ -180,4 +203,6 @@ name = "simpleseed"
   overwrite_dockerfile=true
 ```
 
-Note: until github.com/lingo-reviews/tenets is published, you'll have to manually git clone the repository into ~/go/src/github.com/lingo-reviews/tenets before building a docker image.
+Note: until github.com/lingo-reviews/tenets is published, you'll have to
+manually git clone the repository into ~/go/src/github.com/lingo-
+reviews/tenets before building a docker image.

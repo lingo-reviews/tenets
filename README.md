@@ -2,7 +2,9 @@
 
 ## House keeping
 
-Welcome to the closed Alpha! There will be bugs. Please help us catch them and open an issue. We also welcome feature requests and feedback on lingo's usefulness and potential.
+Welcome to the closed Alpha! There will be bugs. Please help us catch them and
+open an issue. We also welcome feature requests and feedback on lingo's
+usefulness and potential.
 
 Okay, with that out of the way, let's get started.
 
@@ -38,7 +40,11 @@ lingo docs
 
 ```
 
-When lingo reviews, it looks for a .lingo file in the current or parent directories. If those tenets use a docker driver (default) and no local docker image is found, lingo goes and gets it. The first time you pull a docker tenet, it will pull the tenet base images. This means future tenet pulls will be much quicker.
+When lingo reviews, it looks for a .lingo file in the current or parent
+directories. If those tenets use a docker driver (default) and no local docker
+image is found, lingo goes and gets it. The first time you pull a docker
+tenet, it will pull the tenet base images. This means future tenet pulls will
+be much quicker.
 
 
 Next, start without a .lingo file:
@@ -65,13 +71,16 @@ lingo review --output-format --json-pretty
 
 ```
 
-Notes: Tenets can be pulled from any docker repository. A better tenet search UI is in the pipeline.
+Notes: Tenets can be pulled from any docker repository. A better tenet search
+UI is in the pipeline.
 
-Lingo will prompt you to open each issue. Supported editors are: vi, vim, emacs, nano and subl. To skip the confirm steps, use --keep-all.
+Lingo will prompt you to open each issue. Supported editors are: vi, vim,
+emacs, nano and subl. To skip the confirm steps, use --keep-all.
 
 ### Binary Quick Start
 
-All the other example folders under go/tenets use the binary driver. To build them all at once, cd into the root of go/tenets and run:
+All the other example folders under go/tenets use the binary driver. To build
+them all at once, cd into the root of go/tenets and run:
 
 ```bash
 lingo build binary --all
@@ -90,17 +99,24 @@ binary 17 / 17 [========================================================] 100.00
 Success! All binary tenets built.
 ```
 
-`cd` into any example folder and run `lingo review`. In a similar fashion, you can `lingo build docker --all` to build local copies of all the docker tenets.To add the binary drivers, we need to specify the driver when we add it:
+`cd into any example folder and run lingo review. In a similar fashion, you
+`can lingo build docker --all to build local copies of all the docker
+`tenets.To add the binary drivers, we need to specify the driver when we add
+`it:
 
 ```bash
 lingo add lingoreviews/simpleseed --driver binary
 ```
 
-Otherwise, the driver will default to "docker". By default, binary tenets are installed in ~/.lingo_home/tenets/[owner]/[name]. This can be overridden with the LINGO_BIN environment variable.
+Otherwise, the driver will default to "docker". By default, binary tenets are
+installed in ~/.lingo_home/tenets/[owner]/[name]. This can be overridden with
+the LINGO_BIN environment variable.
 
 ## Bash Auto-Complete
 
-Run `lingo --generate-bash-completion` to enable commands to auto-complete.  Commands such as `add` and `info` will auto-complete with the names of built binary tenets. 
+Run `lingo --generate-bash-completion` to enable commands to auto-complete.
+Commands such as `add` and `info` will auto-complete with the names of built
+binary tenets.
 
 ## Options
 
@@ -119,12 +135,19 @@ lingo add lingoreviews/imports --options blacklist_regex=".*/State"
 ## Writing a Tenet
 
 # Go
-Start with go/dev/README.md. The `go/tenets` directory also has a variety of examples of tenets in Go. Copy `go/tenets/simpleseed` to get started.
+
+Start with go/dev/README.md. The `go/tenets` directory also has a variety of
+examples of tenets in Go. Copy `go/tenets/simpleseed` to get started.
 
 # Other languages
-The api.proto file in the root of this repoistory can be used to generate the tenet API libs in C, C++, Java, Go, Node.js, Python, Ruby, Objective-C, PHP and C#. Visit grpc.io to learn more.
+
+The api.proto file in the root of this repoistory can be used to generate the
+tenet API libs in C, C++, Java, Go, Node.js, Python, Ruby, Objective-C, PHP
+and C#. Visit grpc.io to learn more.
 
 
 ## LAAS - Lingo As As Service
 
-Go to www.lingo.reviews/dashboard to hook lingo up your github repoistory. Add a .lingo files to your repoistory and the lingo bot will review every new pull request.
+Go to www.lingo.reviews/dashboard to hook lingo up your github repoistory. Add
+a .lingo files to your repoistory and the lingo bot will review every new pull
+request.
