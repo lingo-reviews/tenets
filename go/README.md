@@ -2,7 +2,7 @@
 
 ### dev/
 
-A helper libs for writing a tenet in Go.
+Helper libs for writing a tenet in Go.
 
 ### tenets/
 

@@ -5,7 +5,7 @@ A tenet is a micro-service which talks to lingo over RPC. In this directory you'
 
 ### api/
 
-The RPC api. This is the low level transport code generated from api.proto which enables lingo to talk to your tenet. You can basically ignore it.
+The RPC api. This is the low level transport code generated from api.proto which enables lingo to talk to your tenet. As a tenet author, you can safely ignore it.
 
 ### server/
 
@@ -23,7 +23,7 @@ There are only three interfaces you'll use to write a tenet. You'll find these i
 
 ## Tenet
 Tenet defines what the tenet is about and sets up anything needed before a
-review. Tenet should never be called inside SmellNode and SmellLine.
+review.
 
 ## Review
 // Review allows you to raise issues when smelling lines and nodes.
@@ -47,7 +47,7 @@ server.Serve(&tenet.Base{})
 }
 ```
 
-You could build and add this tenet to lingo, but it would do nothing. We should define what this tenet's all about:
+You could build and add this tenet to lingo, but it would do nothing. First, define what this tenet's all about:
 
 ```go
 t  := &tenet.Base{}
@@ -72,7 +72,7 @@ that all comments could be more awesome.
 server.Serve(t)
 ```
 
-Let's make it smell all comments in a go file:
+Then, register issues and smell AST nodes and lines for those issues:
 
 ```go
 t  := &tenet.Base{}
@@ -102,7 +102,7 @@ This will raise an issue for every non-awesome comment, with the default message
 t.RegisterIssue("sucky_comment", tenet.AddComment("this comment could be more awesome"))
 ```
 
-What if we don't want to raise every issue, but just enough to point out the problem?
+To not raise every issue, but just enough to point out the problem:
 
 ```go
 
@@ -116,9 +116,9 @@ issue := t.RegisterIssue("sucky_comment",
 
 ```
 
-The first time we see the issue, lingo will comment "comments really should be awesome". Then, once for every file the issue is found in lingo will comment "the comment in this file should also be more awesome".
+The first time the issue is seen, lingo will comment "comments really should be awesome". Then, once every time the issue is found in a file, lingo will comment "the comment in this file should also be more awesome".
 
-Let's set a variable in the comment:
+To set a variable in the comment:
 
 ```go
 issue := t.RegisterIssue("sucky_comment",
@@ -130,7 +130,7 @@ r.RaiseNodeIssue(issue, commentNode, tenet.CommentVar({{.myvar}}, "awesome"))
 
 ```
 
-Let's get that variable from the user:
+To get that variable from the user:
 
 ```go
 	// t.RegisterOption(name, default, usage)
@@ -143,8 +143,7 @@ Let's get that variable from the user:
 
 When the user runs `lingo info <tenet>` they'll see "comment_type" as an option they can set. t.RegisterOption returns a pointer to a string. The value of that pointer is updated with the user's setting by the time it is used in the smell.
 
-What if we've found an smell, but are not sure if it's really an issue? You can register custom metrics an tags to handle this.
-
+Register custom metrics an tags to manage the applicability of tenets:
 
 ```go
 	confidence := t.RegisterMetric("confidence")
@@ -165,3 +164,18 @@ This enables lingo to monitor a code base with fine grained control. You could, 
 
 NOTE: In the closed Alpha you can register and raise metrics and tags - and they'll appear in the json output - but you cannot yet filter a review with them.
 
+### Building
+
+`lingo build` looks for a .lingofile for instructions on how to build the tenet. This is the simpleseed .lingofile:
+
+```toml
+language = "go"
+owner = "lingoreviews"
+name = "simpleseed"
+
+[docker]
+  build=false
+  overwrite_dockerfile=true
+```
+
+Note: until github.com/lingo-reviews/tenets is published, you'll have to manually git clone the repository into ~/go/src/github.com/lingo-reviews/tenets before building a docker image.
