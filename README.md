@@ -11,7 +11,13 @@ Okay, with that out of the way, let's get started.
 To install, run:
 
 ```bash
-wget http://lingo.reviews/lingo.zip; unzip lingo.zip; sudo cp lingo /usr/local/bin/
+wget http://lingo.reviews/lingo.zip; unzip lingo.zip
+```
+
+Then place lingo in your PATH:
+
+```bash
+cp lingo /usr/local/bin/
 ```
 
 ## First Run
@@ -35,7 +41,7 @@ lingo docs
 When lingo reviews, it looks for a .lingo file in the current or parent directories. If those tenets use a docker driver (default) and no local docker image is found, lingo goes and gets it. The first time you pull a docker tenet, it will pull the tenet base images. This means future tenet pulls will be much quicker.
 
 
-This time, let's start without a .lingo:
+Next, start without a .lingo file:
 
 ```bash
 cd go/tenets/simpleseed/example
@@ -119,6 +125,6 @@ Start with go/dev/README.md. The `go/tenets` directory also has a variety of exa
 The api.proto file in the root of this repoistory can be used to generate the tenet API libs in C, C++, Java, Go, Node.js, Python, Ruby, Objective-C, PHP and C#. Visit grpc.io to learn more.
 
 
-### LAAS - Lingo As As Service
+## LAAS - Lingo As As Service
 
 Go to www.lingo.reviews/dashboard to hook lingo up your github repoistory. Add a .lingo files to your repoistory and the lingo bot will review every new pull request.

@@ -1,11 +1,12 @@
-# Write a Go Tenet!
+# Write a Go Tenet
 
-A tenet is a micro-service which talks to lingo over RPC. In this directory you'll find:
+## Orientation
 
+In this directory you'll find:
 
 ### api/
 
-The RPC api. This is the low level transport code generated from api.proto which enables lingo to talk to your tenet. As a tenet author, you can safely ignore it.
+A tenet is a micro-service which talks to lingo over RPC. The api package is the RPC API. This is the low level transport code generated from api.proto which enables lingo to talk to your tenet. As a tenet author, you can safely ignore it.
 
 ### server/
 
@@ -21,16 +22,17 @@ This should be called at the end of your main function. It takes a tenet object 
 
 There are only three interfaces you'll use to write a tenet. You'll find these in tenet/interface.go:
 
-## Tenet
+## tenet.Tenet
 Tenet defines what the tenet is about and sets up anything needed before a
 review.
 
-## Review
+## tenet.Review
 // Review allows you to raise issues when smelling lines and nodes.
 
-## File
+## tenet.File
 // File represents the current file being reviewed.
 
+## Getting Started
 
 Here is the minimum code to get a tenet running:
 
