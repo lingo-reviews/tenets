@@ -2,7 +2,7 @@
 
 ## House keeping
 
-Thank you for testing lingo in it's infancy. This is Alpha. The libs are woefully under unit tested and have more TODOs than comments. There will be bugs. Please open an issue for any bugs or feature requests. At this early stage, we are interested in your assessment of lingo's usefulness and potential.
+Welcome to the closed Alpha! The libs are woefully under unit tested and we have more TODOs than comments. There will be bugs. Please help us catch them and open an issue. We welcome feature requests and feedback on lingo's usefulness and potential.
 
 Okay, with that out of the way, let's get started.
 
@@ -172,8 +172,13 @@ Commands and some arguments will now autocomplete, in particular installed binar
 
 ## Writing a Tenet
 
+# Go
 Start with go/dev/README.md. The `go/tenets` directory also has a variety of examples of tenets in Go. Copy one of those to get started.
 
-## Hey! Where's my LAAS?
+# Other languages
+The api.proto file in the root of this file can be used to generate the tenet API libs in C, C++, Java, Go, Node.js, Python, Ruby, Objective-C, PHP and C#. Visit grpc.io to learn more.
 
-We've recently refactored lingo and need to update Lingo as a Service to work with the new style tenets. Check back here for updates.
+
+### LAAS - Lingo As As Service
+
+Go to www.lingo.reviews/dashboard to hook lingo up your github repoistory. Add a .lingo file to your repo and the lingo bot will review every new pull request.
