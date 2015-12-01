@@ -123,10 +123,10 @@ binary tenets.
 Some tenets take options. To view their available options run:
 
 ```bash
-lingo info
+lingo info <tenet-name>
 ```
 
-The imports tenet takes a blacklist_regex option, here's an example of setting it:
+The imports tenet, for example, takes a blacklist_regex option, here's an example of setting it:
 
 ```bash
 lingo add lingoreviews/imports --options blacklist_regex=".*/State"
