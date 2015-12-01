@@ -34,8 +34,9 @@ message Nil {}
 
 // File to be reviewed.
 message File {
-  // name of file.
-  string name = 1;
+	// name of file.
+	string name          = 1;
+	repeated int64 lines = 2;
 }
 
 // Issue returned from a review.

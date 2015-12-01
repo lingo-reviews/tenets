@@ -14,13 +14,14 @@ import (
 
 	"text/template"
 
+	"github.com/lingo-reviews/tenets/go/dev/api"
 	"github.com/lingo-reviews/tenets/go/dev/tenet/log"
 )
 
 type review struct {
 	tenet   Tenet
 	waitc   chan struct{}
-	filesc  chan string
+	filesc  chan *api.File
 	issuesc chan *Issue
 
 	// file is the file currently under review.
@@ -56,12 +57,12 @@ func (r *review) StartReview() {
 		for {
 			select {
 			case file, ok := <-r.filesc:
-				if !ok && file == "" {
+				if !ok && file == nil {
 					log.Println("all files reviewed.")
 					return
 				}
 
-				f, err := buildFile(file, "", fset)
+				f, err := buildFile(file.Name, "", fset, file.Lines)
 				if err != nil {
 					log.Println("could not build file")
 					b.SendError(errors.Annotatef(err, "could not find file: %q", file))
@@ -79,7 +80,7 @@ func (r *review) StartReview() {
 	}()
 }
 
-func (r *review) SendFile(file string) {
+func (r *review) SendFile(file *api.File) {
 	r.filesc <- file
 }
 

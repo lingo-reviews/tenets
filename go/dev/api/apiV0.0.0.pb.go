@@ -64,7 +64,8 @@ func (*Nil) ProtoMessage()    {}
 // File to be reviewed.
 type File struct {
 	// name of file.
-	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Name  string  `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Lines []int64 `protobuf:"varint,2,rep,name=lines" json:"lines,omitempty"`
 }
 
 func (m *File) Reset()         { *m = File{} }

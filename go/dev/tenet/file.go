@@ -22,10 +22,11 @@ import (
 
 // gofile implements File
 type gofile struct {
-	fset     *token.FileSet
-	ast      *ast.File
-	lines    [][]byte
-	filename string
+	fset      *token.FileSet
+	ast       *ast.File
+	lines     [][]byte
+	diffLines []int64
+	filename  string
 }
 
 func (f *gofile) AST() *ast.File {
@@ -94,7 +95,7 @@ func (f *gofile) IsMain() bool {
 
 func (f *gofile) IsTest() bool { return strings.HasSuffix(f.Filename(), "_test.go") }
 
-func buildFile(path, src string, fset *token.FileSet) (File, error) {
+func buildFile(path, src string, fset *token.FileSet, diffLines []int64) (File, error) {
 	var srcBytes []byte
 	if src == "" {
 		var err error
@@ -114,9 +115,10 @@ func buildFile(path, src string, fset *token.FileSet) (File, error) {
 
 	// type info
 	file := &gofile{
-		filename: path,
-		ast:      f,
-		fset:     fset,
+		filename:  path,
+		ast:       f,
+		fset:      fset,
+		diffLines: diffLines,
 	}
 
 	file.setLines(bytes.Split(srcBytes, []byte("\n")))
