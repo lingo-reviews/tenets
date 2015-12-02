@@ -114,7 +114,7 @@ binary 17 / 17 [========================================================] 100.00
 Success! All binary tenets built.
 ```
 
-Lingo  build and install each binary. Commands such as `add` and `info` will
+Lingo builds and installs each binary. Commands such as `add` and `info` will
 now auto-complete with the names of the built binary tenets.
 
 `cd` into any example folder and run `lingo review`. In a similar fashion, you
@@ -147,13 +147,13 @@ lingo add lingoreviews/imports --options blacklist_regex=".*/State"
 
 ## Writing a Tenet
 
-# Go
+### Go
 
 Start [here](https://github.com/lingo-reviews/tenets/tree/master/go/dev). The
 `go/tenets` directory also has a variety of examples of tenets in Go. Copy
 `go/tenets/simpleseed` to get started.
 
-# Other languages
+### Other languages
 
 The api.proto file in the root of this repoistory can be used to generate the
 tenet API libs in C, C++, Java, Go, Node.js, Python, Ruby, Objective-C, PHP
