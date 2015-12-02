@@ -438,17 +438,16 @@ func (r *review) setContextualComment(issue *Issue) error {
 
 	// TODO(waigani) allow user to limit number of default comments.
 	if len(comments) == 0 {
+
 		comments = commSet.commentsForContext(DefaultComment)
 	}
 
 	// build comments with template args
 	t := template.New("comment template")
-	// default message if no comment set
-	commentTemplate := "Issue Found"
-	if len(comments) > 0 {
-		commentTemplate = comments[0].Template
-	}
-	ct, err := t.Parse(commentTemplate) // TODO(waigani) This only returns the first comment for each context.
+
+	// Note: This returns the first comment for each context.
+	// It will default to "Issue Found" if the tenet set no comments.
+	ct, err := t.Parse(comments[0].Template)
 	if err != nil {
 		return err
 	}

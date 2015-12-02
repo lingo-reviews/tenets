@@ -195,7 +195,7 @@ func (s *baseSuite) TestSkipFallsBackToCustomDefaultFindsEveryIssue(c *gc.C) {
 	b.RegisterIssue("issue_with_every_line",
 		tenet.AddComment("first comment", tenet.FirstComment),
 		tenet.AddComment("third comment", tenet.ThirdComment),
-		tenet.AddComment("Custom Default Msg", tenet.DefaultComment),
+		tenet.AddComment("Custom Default Msg"),
 	)
 
 	// Add a smell which raises the above issue for every line.

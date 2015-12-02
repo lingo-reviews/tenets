@@ -123,10 +123,10 @@ func (b *Base) setOpt(opt *api.Option) error {
 
 func AddComment(comment string, ctx ...CommentContext) RegisterIssueOption {
 	return func(issue *Issue) {
-
 		if issue.commentSet == nil {
 			issue.commentSet = &commentSet{}
 		}
+
 		issue.commentSet.AddComment(comment, ctx...)
 	}
 }
@@ -199,6 +199,13 @@ func (b *Base) RegisterIssue(issueName string, opts ...RegisterIssueOption) stri
 	for _, opt := range opts {
 		opt(issue)
 	}
+
+	// Add a defualt comment if tenet has not added any.
+	commSet := issue.comments()
+	if len(commSet.Comments) == 0 {
+		issue.commentSet.AddComment("Issue Found")
+	}
+
 	if b.registeredIssues == nil {
 		b.registeredIssues = map[string]*Issue{}
 	}
