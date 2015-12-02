@@ -163,7 +163,7 @@ option they can set. t.RegisterOption returns a pointer to a string with a
 default value, in the case above it's "awesome". The value is updated with the
 user's setting by the time it is used in the smell.
 
-Register custom metrics an tags to manage the applicability of tenets:
+Register custom metrics and tags to manage the applicability of tenets:
 
 ```go
 	confidence := t.RegisterMetric("confidence")

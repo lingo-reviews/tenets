@@ -13,13 +13,13 @@ Okay, with that out of the way, let's get started.
 To install, run:
 
 ```bash
-wget http://lingo.reviews/lingo.zip; unzip lingo.zip
+wget http://lingo.reviews/lingo.zip && unzip lingo.zip
 ```
 
 Then place lingo in your PATH:
 
 ```bash
-cp lingo /usr/local/bin/
+sudo cp lingo /usr/local/bin/
 ```
 
 ## First Run
@@ -30,7 +30,7 @@ If you have Docker installed:
 
 ```bash
 # Find some source code to review.
-cd go/tenets/license/tenet/example
+cd $GOPATH/src/github.com/lingo-reviews/tenets/go/tenets/license/tenet/example
 
 # Review the code.
 lingo review
@@ -50,7 +50,7 @@ be much quicker.
 Next, start without a .lingo file:
 
 ```bash
-cd go/tenets/simpleseed/example
+cd $GOPATH/src/github.com/lingo-reviews/tenets/go/tenets/simpleseed/tenet/example
 
 # This will write a .lingo file.
 lingo init
@@ -79,9 +79,16 @@ emacs, nano and subl. To skip the confirm steps, use --keep-all.
 
 ### Binary Quick Start
 
-All the other example folders under go/tenets use the binary driver. To build
-them all at once, cd into the root of go/tenets and run:
+All the other example folders under go/tenets use the binary driver. We will
+use the `lingo build` command to build them all at once. But while this
+repoistory is private, we will have to clone it first:
 
+```bash
+cd $GOPATH/src/github.com/lingo-reviews/
+git clone https://github.com/lingo-reviews/tenets.git
+```
+
+Then cd into go/tenets and run:
 ```bash
 lingo build binary --all
 ```
@@ -98,6 +105,9 @@ Building Go binary: [~/.lingo_home/tenets/lingoreviews/juju_worker_periodic]
 binary 17 / 17 [========================================================] 100.00 % 12s
 Success! All binary tenets built.
 ```
+
+Lingo will update any packages each tenet needs and the build and install each
+binary.
 
 `cd` into any example folder and run `lingo review`. In a similar fashion, you
 can `lingo build docker --all` to build local copies of all the docker
