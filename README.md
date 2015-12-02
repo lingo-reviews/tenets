@@ -8,8 +8,9 @@ usefulness and potential.
 
 Okay, with that out of the way, let's get started.
 
-## Install
+## Install and Setup
 
+### Install Lingo
 To install, run:
 
 ```bash
@@ -20,6 +21,20 @@ Then place lingo in your PATH:
 
 ```bash
 sudo cp lingo /usr/local/bin/
+```
+
+#### Enable Bash Auto-Complete
+
+Run `lingo setup-auto-completion` to enable command auto-completion.
+
+### Clone Repository
+
+While this repoistory is private, you will need to clone it as follows:
+
+```bash
+mkdir -p $GOPATH/src/github.com/lingo-reviews/
+cd $GOPATH/src/github.com/lingo-reviews/
+git clone https://github.com/lingo-reviews/tenets.git
 ```
 
 ## First Run
@@ -50,7 +65,7 @@ be much quicker.
 Next, start without a .lingo file:
 
 ```bash
-cd $GOPATH/src/github.com/lingo-reviews/tenets/go/tenets/simpleseed/tenet/example
+cd $GOPATH/src/github.com/lingo-reviews/tenets/go/tenets/simpleseed/example
 
 # This will write a .lingo file.
 lingo init
@@ -80,15 +95,8 @@ emacs, nano and subl. To skip the confirm steps, use --keep-all.
 ### Binary Quick Start
 
 All the other example folders under go/tenets use the binary driver. We will
-use the `lingo build` command to build them all at once. But while this
-repoistory is private, we will have to clone it first:
+use the `lingo build` command to build them all at once. `cd` into go/tenets and run:
 
-```bash
-cd $GOPATH/src/github.com/lingo-reviews/
-git clone https://github.com/lingo-reviews/tenets.git
-```
-
-Then cd into go/tenets and run:
 ```bash
 lingo build binary --all
 ```
@@ -106,8 +114,8 @@ binary 17 / 17 [========================================================] 100.00
 Success! All binary tenets built.
 ```
 
-Lingo will update any packages each tenet needs and the build and install each
-binary.
+Lingo  build and install each binary. Commands such as `add` and `info` will
+now auto-complete with the names of the built binary tenets.
 
 `cd` into any example folder and run `lingo review`. In a similar fashion, you
 can `lingo build docker --all` to build local copies of all the docker
@@ -121,12 +129,6 @@ lingo add lingoreviews/simpleseed --driver binary
 Otherwise, the driver will default to "docker". By default, binary tenets are
 installed in ~/.lingo_home/tenets/[owner]/[name]. This can be overridden with
 the LINGO_BIN environment variable.
-
-## Bash Auto-Complete
-
-Run `lingo --generate-bash-completion` to enable commands to auto-complete.
-Commands such as `add` and `info` will auto-complete with the names of built
-binary tenets.
 
 ## Options
 
