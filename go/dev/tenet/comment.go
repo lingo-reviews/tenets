@@ -14,61 +14,112 @@ const (
 	ThirdComment
 	FourthComment
 	FifthComment
-	FirstCommentInFile
-	SecondCommentInFile
-	ThirdCommentInFile
-	FourthCommentInFile
-	FifthCommentInFile
+	InFirstFile
+	InSecondFile
+	InThirdFile
+	InFourthFile
+	InFifthFile
+	InEveryFile
+	InOverall
 )
 
-type comment struct {
-	// unique id per commentSet.
-	ID int
+var fileContext = map[int]CommentContext{
+	1: InFirstFile,
+	2: InSecondFile,
+	3: InThirdFile,
+	4: InFourthFile,
+	5: InFifthFile,
+}
 
-	// string templates.
+var commContext = map[int]CommentContext{
+	1: FirstComment,
+	2: SecondComment,
+	3: ThirdComment,
+	4: FourthComment,
+	5: FifthComment,
+}
+
+type comment struct {
+
+	// the comment template.
 	Template string
 
 	// the context in which this comment should be used.
-	Context CommentContext
+	commentContexts []CommentContext
 
-	// Has an issue been raised in a context that matches this comment's
-	// context? Note, even if true, this comment may not be used if another
-	// comment also matched the context. We record matches to know when we
-	// have found issues for all contexts and can stop reviewing.
-	Matched bool
+	// the file context to which the commentContext is scoped.
+	fileContexts []CommentContext
+
+	// a map of each context the comment was found in.
+	matches map[CommentContext]bool
 }
 
-type commentSet struct {
-	Comments []*comment
-
-	// comment id incrementor
-	idInc int
+func (c *comment) addCommentCtx(ctx CommentContext) {
+	c.commentContexts = append(c.commentContexts, ctx)
 }
 
-func (c *commentSet) AddComment(commentTemplate string, context ...CommentContext) {
-	var finalCtx CommentContext
-	if len(context) == 0 {
-		context = []CommentContext{DefaultComment}
-	}
-	for _, ctx := range context {
-		finalCtx |= ctx
-	}
-
-	c.idInc++
-	c.Comments = append(c.Comments, &comment{
-		ID:       c.idInc,
-		Template: commentTemplate,
-		Context:  finalCtx,
-	})
+func (c *comment) addFileCtx(ctx CommentContext) {
+	c.fileContexts = append(c.fileContexts, ctx)
 }
 
-func (c *commentSet) commentsForContext(con CommentContext) []*comment {
-	var comments []*comment
-	for _, comm := range c.Comments {
-		if comm.Context&con != 0 {
-			comments = append(comments, comm)
+// add a context in which this comment was matched.
+func (c *comment) addMatch(ctx CommentContext) {
+	c.matches[ctx] = true
+}
+
+func (c *comment) allContextsMatched() bool {
+	for _, ctx := range c.allContexts() {
+		var matched bool
+		for matchedCtx := range c.matches {
+
+			// If we matched on a default, don't count it.
+			if ctx&(DefaultComment|InEveryFile) != 0 {
+				continue
+			}
+
+			if ctx&matchedCtx == ctx {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			return false
 		}
 	}
+	return true
+}
 
-	return comments
+// returns a slice of each commentContext scoped to a file context.
+func (c *comment) allContexts() []CommentContext {
+	var ctxs []CommentContext
+	for _, fCtx := range c.fileContexts {
+		for _, commCtx := range c.commentContexts {
+			ctxs = append(ctxs, fCtx|commCtx)
+		}
+	}
+	return ctxs
+}
+
+func (c *comment) matchesContext(ctx CommentContext) bool {
+	for _, commCtx := range c.allContexts() {
+		if commCtx&ctx == commCtx {
+			return true
+		}
+	}
+	return false
+}
+
+func isFileContext(ctx CommentContext) bool {
+
+	// Every file is a special case not mapped in fileContext
+	if ctx&InEveryFile != 0 {
+		return true
+	}
+
+	for _, fCtx := range fileContext {
+		if fCtx&ctx != 0 {
+			return true
+		}
+	}
+	return false
 }

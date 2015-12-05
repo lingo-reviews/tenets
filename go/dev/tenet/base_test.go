@@ -52,7 +52,7 @@ func (s *baseSuite) TestContextFull(c *gc.C) {
 			Comment: "first comment",
 		}}...)
 
-	// assert the context is now matched.
+	// Assert the context is now matched.
 	s.assertCxtFull(c, true)
 }
 
@@ -91,7 +91,7 @@ func (s *baseSuite) TestDefaultContextIsNeverFull(c *gc.C) {
 	s.assertCxtFull(c, false)
 }
 
-func (s *baseSuite) TestSkipContextFallsBackToHardCodedDefault(c *gc.C) {
+func (s *baseSuite) TestSkipContextSkipsIssue(c *gc.C) {
 	b := s.Tenet.(*tenet.Base)
 
 	// no regisitered issues should mean there is no context, which should
@@ -102,7 +102,6 @@ func (s *baseSuite) TestSkipContextFallsBackToHardCodedDefault(c *gc.C) {
 	// context that hasn't matched.
 	b.RegisterIssue("issue_with_first_comment_ctx",
 		tenet.AddComment("first comment", tenet.FirstComment),
-		// tenet.AddComment("second comment", tenet.SecondComment),
 		tenet.AddComment("third comment", tenet.ThirdComment),
 	)
 	s.assertCxtFull(c, false)
@@ -118,9 +117,6 @@ func (s *baseSuite) TestSkipContextFallsBackToHardCodedDefault(c *gc.C) {
 		{
 			Text:    "package mock",
 			Comment: "first comment",
-		}, {
-			Text:    "// 2nd line",
-			Comment: "Issue Found", // This is the hardcoded default.
 		}, {
 			Text:    "// 3rd line",
 			Comment: "third comment",
@@ -250,4 +246,118 @@ func (s *baseSuite) TestRegisterOption(c *gc.C) {
 	c.Assert(*v, gc.Equals, "default")
 	c.Assert(b.MixinConfigOptions(opts), jc.ErrorIsNil)
 	c.Assert(*v, gc.Equals, "value")
+}
+
+// TODO(waigani) table based test of all context combinations.
+func (s *baseSuite) TestContextFirstInEveryFile(c *gc.C) {
+	b := s.Tenet.(*tenet.Base)
+
+	b.RegisterIssue("issue_with_every_line",
+		tenet.AddComment("first comment", tenet.FirstComment, tenet.InEveryFile),
+	)
+
+	// Add a smell which raises the above issue for every line.
+	b.SmellLine(func(r tenet.Review, n int, line []byte) error {
+		r.RaiseLineIssue("issue_with_every_line", n, n)
+		return nil
+	})
+
+	// Add three files with a line of code.
+	src := `
+package mock
+// 2nd line
+// 3rd line
+// 4th line
+`[1:]
+	files := []string{
+		s.TmpFile(c, src),
+		s.TmpFile(c, src),
+		s.TmpFile(c, src),
+	}
+
+	expectedIssues := []tt.ExpectedIssue{
+		{
+			Text:     "package mock",
+			Comment:  "first comment",
+			Filename: files[0],
+		}, {
+			Text:     "package mock",
+			Comment:  "first comment",
+			Filename: files[1],
+		}, {
+			Text:     "package mock",
+			Comment:  "first comment",
+			Filename: files[2],
+		},
+	}
+
+	s.CheckFiles(c, files, expectedIssues...)
+
+	// Assert the context is now matched.
+	s.assertCxtFull(c, false)
+}
+
+// TODO(waigani) table based test of all context combinations.
+func (s *baseSuite) TestContextDefaultInSecondFile(c *gc.C) {
+	b := s.Tenet.(*tenet.Base)
+
+	b.RegisterIssue("issue_with_every_line",
+		tenet.AddComment("first comment", tenet.DefaultComment, tenet.InSecondFile),
+	)
+
+	// Add a smell which raises the above issue for every line.
+	b.SmellLine(func(r tenet.Review, n int, line []byte) error {
+		r.RaiseLineIssue("issue_with_every_line", n, n)
+		return nil
+	})
+
+	// Add three files with a line of code.
+	src := `
+package mock
+// 2nd line
+// 3rd line
+// 4th line
+`[1:]
+
+	src2 := `
+package secondMock
+// 2.2nd line
+// 2.3rd line
+// 2.4th line
+`[1:]
+
+	files := []string{
+		s.TmpFile(c, src),
+		s.TmpFile(c, src2),
+		s.TmpFile(c, src),
+	}
+
+	expectedIssues := []tt.ExpectedIssue{
+		{
+			Text:     "package secondMock",
+			Comment:  "first comment",
+			Filename: files[1],
+		}, {
+			Text:     "// 2.2nd line",
+			Comment:  "first comment",
+			Filename: files[1],
+		}, {
+			Text:     "// 2.3rd line",
+			Comment:  "first comment",
+			Filename: files[1],
+		}, {
+			Text:     "// 2.4th line",
+			Comment:  "first comment",
+			Filename: files[1],
+		}, {
+			Text:    "", // new line at end of file
+			Comment: "first comment",
+		},
+	}
+
+	s.CheckFiles(c, files, expectedIssues...)
+
+	// TODO(waigani) this should be true. Once we sniff the last node/line of
+	// a file, we can set DefaultComment|FileContext as matched
+	s.assertCxtFull(c, false)
 }

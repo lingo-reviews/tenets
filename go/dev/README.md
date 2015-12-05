@@ -126,7 +126,7 @@ issue := t.RegisterIssue("sucky_comment",
 		// You can add as may comments as you like. Though note only the
 		// comment matching the context will be used.
 		tenet.AddComment("comments really should be awesome", tenet.FirstComment),
-		tenet.AddComment("the comment in this file should also be more awesome", tenet.FirstCommentInFile),
+		tenet.AddComment("the comment in this file should also be more awesome", tenet.FirstComment, tenet.InEveryFile),
 	)
 
 ```

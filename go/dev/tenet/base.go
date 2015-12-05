@@ -123,11 +123,7 @@ func (b *Base) setOpt(opt *api.Option) error {
 
 func AddComment(comment string, ctx ...CommentContext) RegisterIssueOption {
 	return func(issue *Issue) {
-		if issue.commentSet == nil {
-			issue.commentSet = &commentSet{}
-		}
-
-		issue.commentSet.AddComment(comment, ctx...)
+		issue.addComment(comment, ctx...)
 	}
 }
 
@@ -191,9 +187,8 @@ func (b *Base) RegisterTag(tag string) RaiseIssueOption {
 
 func (b *Base) RegisterIssue(issueName string, opts ...RegisterIssueOption) string {
 	issue := &Issue{
-		Name:       issueName,
-		commentSet: &commentSet{},
-		CommVars:   map[string]interface{}{},
+		Name:     issueName,
+		CommVars: map[string]interface{}{},
 	}
 
 	for _, opt := range opts {
@@ -201,9 +196,8 @@ func (b *Base) RegisterIssue(issueName string, opts ...RegisterIssueOption) stri
 	}
 
 	// Add a defualt comment if tenet has not added any.
-	commSet := issue.comments()
-	if len(commSet.Comments) == 0 {
-		issue.commentSet.AddComment("Issue Found")
+	if len(issue.comments) == 0 {
+		issue.addComment("Issue Found")
 	}
 
 	if b.registeredIssues == nil {

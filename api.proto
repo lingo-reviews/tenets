@@ -13,7 +13,7 @@ package api;
 service Tenet {
 
 	// Takes a stream of File to be reviewed and returns a stream of Issue.
-	rpc Review(stream File) returns (stream Issue) {}
+	rpc Review( stream File) returns (stream Issue) {}
 
 	// Info returns metadata about this tenet.
  	rpc GetInfo(Nil) returns (Info) {}
