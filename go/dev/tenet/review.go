@@ -369,9 +369,13 @@ func (r *review) raiseIssue(issueName string, iRange *issueRange, opts []RaiseIs
 	// TODO(waigani) this is a quick hack. We need to pull File out of *Issue.
 	issue.file = r.File()
 	issue.setSource(iRange)
-	r.setContext(issue)
 
 	if err := r.setContextualComment(issue); err != nil {
+		// If no comment has been set for the context in which this issue was
+		// found, don't raise it.
+		if err == errNoCommentForContext {
+			return r
+		}
 		issue.Err = err
 	}
 
@@ -380,6 +384,7 @@ func (r *review) raiseIssue(issueName string, iRange *issueRange, opts []RaiseIs
 	log.Println("not blocked")
 
 	if r.areAllContextsMatched() {
+
 		// This is our last issue raised, close the issue chan. Note: if a
 		// tenet reviews async, this will become a race condition.
 		r.Close()
@@ -393,35 +398,24 @@ func (self *Issue) copyTo(newIssue *Issue) {
 
 // --- issue context ---
 
-// SetContext applies the context to this issue and updates its internal state of
-// context to apply to the next issue. It assumes issues will come in
-// synchronously.
-func (r *review) setContext(issue *Issue) {
-	if r.issueOrder == nil {
-		r.issueOrder = newIssueOrder()
+func addContextIfMissing(collection CommentContext, contexts ...CommentContext) CommentContext {
+	for _, context := range contexts {
+		if collection&context == 0 {
+			collection |= context
+		}
 	}
-	o := r.issueOrder
-	o.increment(issue)
-
-	overallCtx := overallOrderToContext[o.overall[issue.Name]]
-	fileCtx := fileOrderToContext[o.file[issue.Name][issue.Filename()]]
-
-	issue.Context = overallCtx | fileCtx
+	return collection
 }
 
-// isContextFull returns true if all comments for all issues have been used.
+// isContextFull returns true if all contexts for all comments for all issues have been used.
 func (r *review) areAllContextsMatched() bool {
 	b := r.baseTenet()
-	for _, issue := range b.registeredIssues {
-		commSet := issue.comments()
-		if len(commSet.commentsForContext(DefaultComment)) > 0 {
-			return false
-		}
 
-		for _, comm := range commSet.Comments {
-			// If an issue has a comment for a context that has not yet been
-			// matched, return false.
-			if comm.Matched == false {
+	// TODO(waigani) keep a running tally of matched contexts and only iterate
+	// over those that have not been found.
+	for _, issue := range b.registeredIssues {
+		for _, comm := range issue.comments {
+			if !comm.allContextsMatched() {
 				return false
 			}
 		}
@@ -429,36 +423,78 @@ func (r *review) areAllContextsMatched() bool {
 	return true
 }
 
+var errNoCommentForContext = errors.New("there are no comments for this context")
+
+func (r *review) getIssueOrder() *issueOrder {
+	if r.issueOrder == nil {
+		r.issueOrder = newIssueOrder()
+	}
+	return r.issueOrder
+}
+
+// setContextualComment applies the contextual comment to this issue and
+// updates its internal state of context to apply to the next issue. It
+// assumes issues will come in synchronously.
 func (r *review) setContextualComment(issue *Issue) error {
-	commSet := issue.comments()
-	comments := commSet.commentsForContext(issue.Context)
-	for _, comm := range comments {
-		comm.Matched = true
+	o := r.getIssueOrder()
+	issueName := issue.Name
+	filename := r.File().Filename()
+	o.increment(issueName, filename)
+
+	fileCtx := r.currentFileContext(issue.Name)
+	commentInFileCtx := commContext[o.issueInFileCount[issueName][filename]]
+	commentInOverallCtx := commContext[o.issueCount[issueName]]
+
+	var foundComments []*comment
+	for _, comm := range issue.comments {
+
+		var found bool
+		// does the comment match an in-file context?
+		foundFileCtx := fileCtx | commentInFileCtx | InEveryFile | DefaultComment
+		if comm.matchesContext(foundFileCtx) {
+			found = true
+			comm.addMatch(fileCtx)
+		}
+		// does the comment match an overall context?
+		foundOverallCtx := InOverall | commentInOverallCtx | DefaultComment
+		if comm.matchesContext(foundOverallCtx) {
+			found = true
+			comm.addMatch(foundOverallCtx)
+		}
+
+		if found {
+			foundComments = append(foundComments, comm)
+		}
 	}
 
-	// TODO(waigani) allow user to limit number of default comments.
-	if len(comments) == 0 {
-
-		comments = commSet.commentsForContext(DefaultComment)
+	if len(foundComments) == 0 {
+		return errNoCommentForContext
 	}
 
-	// build comments with template args
+	var err error
+	issue.Comment, err = buildComment(foundComments[0].Template, issue.CommVars)
+	return err
+}
+
+func buildComment(commentTemplate string, commentVars map[string]interface{}) (string, error) {
+	// Build comments with template args
 	t := template.New("comment template")
 
-	// Note: This returns the first comment for each context.
-	// It will default to "Issue Found" if the tenet set no comments.
-	ct, err := t.Parse(comments[0].Template)
+	ct, err := t.Parse(commentTemplate)
 	if err != nil {
-		return err
+		return "", err
 	}
 	var buf bytes.Buffer
-	if err = ct.Execute(&buf, issue.CommVars); err != nil {
-		return err
+	if err = ct.Execute(&buf, commentVars); err != nil {
+		return "", err
 	}
-	issue.Comment = buf.String()
 
-	// set the comment as used
-	// comm.Used
+	return buf.String(), nil
+}
 
-	return nil
+// returns the current file's context for this issue.
+func (r *review) currentFileContext(issueName string) CommentContext {
+	o := r.getIssueOrder()
+	fOrder := o.fileOrder[issueName][r.File().Filename()]
+	return fileContext[fOrder]
 }

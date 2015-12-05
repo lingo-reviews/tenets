@@ -67,7 +67,7 @@ type Review interface {
 	// The current file will not be smelt by this tenet again. This should
 	// only be used if it is not logical to keep looking. If you just want to
 	// limit the number of times an issue is raised, use comment contexts. e.g.
-	// tenet.FirstCommentInFile
+	// tenet.FirstFile
 	FileDone()
 }
 

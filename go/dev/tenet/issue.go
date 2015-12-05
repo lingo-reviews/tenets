@@ -22,15 +22,13 @@ type Issue struct {
 	LineText  string                 // the source line(s)
 	CtxAfter  string                 // source lines after the problem line(s)
 	Link      string                 // (optional) the link to the style guide for the problem
-	Context   CommentContext         // Used to select the correct comment
 	NewCode   bool                   // When checking a diff, this indicates if the issue was found in existing or new code.
 	Err       error                  // Any err encounted while building the issue.
 	Metrics   map[string]interface{} // Any metrics that this issue was raised with
 	Tags      []string               // Any tags this issue was raised with.
-
-	commentSet *commentSet
-	file       File // TODO(waigani) get File out of the issue struct.
-	filename   string
+	comments  []*comment             // A slice of possible comments for this issue.
+	file      File                   // TODO(waigani) get File out of the issue struct.
+	filename  string
 
 	// TODO(matt, waigani) Implement this. Possibly use github.com/waigani/diffparser and github.com/waigani/astnode.
 	// The idea is:
@@ -38,23 +36,6 @@ type Issue struct {
 	// - run Lingo with --fix. If issue.CanFix, Lingo prompts the user to keep/discard the patch.
 	// - Lingo assembles patchs into one diff and, depending on flags, either applies the patch or just saves the diff to file.
 	Patch string // A diff patch resolving the issue.
-}
-
-// TODO(waigani) These maps should not be globals. They need to hang off base.
-var fileOrderToContext = map[int]CommentContext{
-	1: FirstCommentInFile,
-	2: SecondCommentInFile,
-	3: ThirdCommentInFile,
-	4: FourthCommentInFile,
-	5: FifthCommentInFile,
-}
-
-var overallOrderToContext = map[int]CommentContext{
-	1: FirstComment,
-	2: SecondComment,
-	3: ThirdComment,
-	4: FourthComment,
-	5: FifthComment,
 }
 
 func (issue *Issue) Filename() string { // TODO(waigani) Remove this and File from issue and just use issue.filename
@@ -71,6 +52,34 @@ func (issue *Issue) setSource(iRange *issueRange) *Issue {
 		issue.LineText += "\n" + string(issue.file.Line(i))
 	}
 	return issue
+}
+
+func (issue *Issue) addComment(commentTemplate string, contexts ...CommentContext) {
+	com := &comment{
+		Template: commentTemplate,
+		matches:  map[CommentContext]bool{},
+	}
+
+	// Split contexts into file and comment contexts.
+	for _, ctx := range contexts {
+		if isFileContext(ctx) {
+			com.addFileCtx(ctx)
+		} else {
+			com.addCommentCtx(ctx)
+		}
+	}
+
+	// Set defaults
+	if len(com.commentContexts) == 0 {
+		com.addCommentCtx(DefaultComment)
+		if len(com.fileContexts) == 0 {
+			com.addFileCtx(InEveryFile)
+		}
+	} else if len(com.fileContexts) == 0 {
+		com.addFileCtx(InOverall)
+	}
+
+	issue.comments = append(issue.comments, com)
 }
 
 // TODO(waigani) rename getStringContext
@@ -96,13 +105,6 @@ func getLineContext(f File, issueStartLine, issueEndLine int) (ctxBefore, ctxAft
 	}
 
 	return strings.Join(before, "\n"), strings.Join(after, "\n")
-}
-
-func (issue *Issue) comments() *commentSet {
-	if issue.commentSet == nil {
-		issue.commentSet = &commentSet{}
-	}
-	return issue.commentSet
 }
 
 // TODO(waigani) NextComment - moves through each comment in context
@@ -133,58 +135,46 @@ func CommentVar(key string, value interface{}) RaiseIssueOption {
 // file: issueName:fileName:issueCount
 // overall: issueName:issueCount
 type issueOrder struct {
-	file    map[string]map[string]int
-	overall map[string]int
+
+	// map of issue name to number of times issue has been found.
+	issueCount map[string]int //map[issueName]issueCount
+
+	// map of issue name to number of times an issue has been found in a file.
+	issueInFileCount map[string]map[string]int //map[issueName]map[fileCount]issueCount
+
+	// map of issue name to when a file with this issue was first found.
+	fileOrder map[string]map[string]int
 }
 
 func newIssueOrder() *issueOrder {
 	return &issueOrder{
-		map[string]map[string]int{},
-		map[string]int{},
+		issueCount:       map[string]int{},
+		issueInFileCount: map[string]map[string]int{},
+		fileOrder:        map[string]map[string]int{},
 	}
 }
 
-func (o *issueOrder) increment(issue *Issue) {
-	if _, ok := o.file[issue.Name]; !ok {
-		o.file[issue.Name] = map[string]int{}
+func (o *issueOrder) increment(issueName, fileName string) {
+	// Setup map.
+	if o.issueInFileCount[issueName] == nil {
+		o.issueInFileCount[issueName] = map[string]int{}
 	}
-	o.file[issue.Name][issue.Filename()]++
-	o.overall[issue.Name]++
+	if o.fileOrder[issueName] == nil {
+		o.fileOrder[issueName] = map[string]int{}
+	}
+
+	// Keep track of the first n files this issue was found in, where n == number of file contexts.
+	if o.fileOrder[issueName][fileName] == 0 {
+		o.fileOrder[issueName][fileName] = len(o.fileOrder[issueName]) + 1
+	}
+
+	// Keep track of the first n times this issue was found, where n == number of comment contexts.
+	// if o.issueCount[issueName] < len(commContext) {
+	o.issueCount[issueName]++
+	// }
+
+	// Keep track of the first n times this issue was found in this file, where n == number of comment contexts.
+	// if o.issueInFileCount[issueName][fileName] < len(commContext) {
+	o.issueInFileCount[issueName][fileName]++
+	// }
 }
-
-// TODO(waigani) below is no longer used as we are reviewing files in sync.
-// When the --keep-all flag is used, we should review all files async and use
-// below.
-
-//order by file name
-// type byFile []*Issue
-
-// func (issues byFile) Len() int {
-// 	return len(issues)
-// }
-// func (issues byFile) Swap(i, j int) {
-// 	issues[i], issues[j] = issues[j], issues[i]
-// }
-// func (issues byFile) Less(i, j int) bool {
-// 	return issues[i].Filename() < issues[j].Filename()
-// }
-
-// // order by line
-// type byLine []*Issue
-
-// func (issues byLine) Len() int {
-// 	return len(issues)
-// }
-// func (issues byLine) Swap(i, j int) {
-// 	issues[i], issues[j] = issues[j], issues[i]
-// }
-// func (issues byLine) Less(i, j int) bool {
-// 	li := issues[i].Position.Start.Line
-// 	lj := issues[j].Position.Start.Line
-
-// 	if li != lj {
-// 		return li < lj
-// 	}
-// 	// if on same line, sort by column
-// 	return issues[i].Position.Start.Column < issues[j].Position.Start.Line
-// }

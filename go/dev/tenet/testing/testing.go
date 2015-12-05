@@ -71,7 +71,7 @@ func (s *TenetSuite) CheckFiles(c *gc.C, files []string, expectedIssues ...Expec
 }
 
 func (s *TenetSuite) CheckSRC(c *gc.C, src string, expectedIssues ...ExpectedIssue) {
-	fName := s.tmpFile(c, src)
+	fName := s.TmpFile(c, src)
 	s.CheckFiles(c, []string{fName}, expectedIssues...)
 }
 
@@ -115,7 +115,7 @@ func (s *TenetSuite) CheckErrs(c *gc.C, errs []error) {
 
 var fileNameCounter int
 
-func (s *TenetSuite) tmpFile(c *gc.C, src string) string {
+func (s *TenetSuite) TmpFile(c *gc.C, src string) string {
 	br := s.baseReview()
 	fileNameCounter++
 	// write a tmp file to check
