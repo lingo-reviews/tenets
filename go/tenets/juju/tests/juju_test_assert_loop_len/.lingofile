@@ -1,0 +1,6 @@
+language = "go"
+owner = "lingoreviews"
+name = "juju_test_assert_loop_len"
+
+[docker]
+  overwrite_dockerfile=true

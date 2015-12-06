@@ -1,0 +1,1 @@
+This license tenet checks that the first lines of the file match the provided license header.
