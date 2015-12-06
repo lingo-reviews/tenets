@@ -120,12 +120,16 @@ func (r *review) check(f File) error {
 	r.fileDone = func() {
 		r.fileDoneMap[f.Filename()] = true
 	}
-	// first walk all ast nodes.
-	if len(b.astVisitors) > 0 {
-		v := r.getVisitor()
-		ast.Walk(v, f.AST())
+
+	// TODO(waigani) this should be r.recursiveASTWalk()
+	for _, visitor := range b.astVisitors {
+		r.walkAST(&visitor)
 	}
 
+	// first walk all ast nodes.
+	// r.recursiveASTWalk(b, f)
+
+	// TODO(waigani) support recursive line visits.
 	if len(b.lineVisitors) > 0 {
 		// then check all src lines
 		r.visitLines()
@@ -133,6 +137,29 @@ func (r *review) check(f File) error {
 
 	return nil
 }
+
+// TODO(waigani) Get this working. We need to group astVisitors by filename.
+// Top level smells will be added to b.astVisitor.
+// Nested smells will be added with r.SmellNode
+// They will be added to the file collection of visitors: r.astVisitors[filename]
+// That collection will be used in the recursiveASTWallk func
+//
+// Slices are only read once at the beginning of a loop, so we need to use a
+// recursive func to update the collection. At the end of the walks, the
+// original range is removed. If new visitors were added during the walks,
+// they are then run.
+// func (r *review) recursiveASTWalk() {
+// 	xxx.Print(r.File().Filename())
+// 	l := len(b.astVisitors)
+// 	for _, visitor := range visitors {
+// 		r.walkAST(&visitor)
+// 	}
+
+// 	b.astVisitors.deleteRange(0, l-1)
+// 	if len(b.astVisitors) > 0 {
+// 		r.recursiveASTWalk(b, f)
+// 	}
+// }
 
 func (r *review) baseTenet() *Base {
 	return r.tenet.(BaseTenet).base()
@@ -243,73 +270,58 @@ func (v *astVisitor) isSmellDoneWithFile(filename string) bool {
 	return v.fileDone[filename]
 }
 
-func (r *review) getVisitor() *astVisitor {
-	b := r.baseTenet()
-	v := &astVisitor{fileDone: map[string]bool{}}
+func (r *review) walkAST(v *astVisitor) {
 	v.visit = func(node ast.Node) (w ast.Visitor) {
-		visitors := b.astVisitors
 		file := r.File()
-		fName := file.Filename()
-
-		// Stop walking the AST tree if we don't have any visitors or this
-		// tenet is done reviewing this file.
-		if len(visitors) == 0 || r.isFileDone(fName) {
-			return nil
-		}
-		if node == nil {
+		if node == nil || v.isSmellDone() || !nodeInDiff(file.(BaseFile), node) {
+			// Keep walking other nodes.
 			return w
 		}
 
-		visitNode := func(visitor astVisitor) {
-			funcType := reflect.TypeOf(visitor.smellNode)
-			nodeType := funcType.In(1)
-			if nodeType == nil {
-				panic("AST Visitor function signature does not have the right format")
+		fName := file.Filename()
+		if v.isSmellDoneWithFile(fName) || r.isFileDone(fName) {
+			// Stop walking all nodes.
+			return nil
+		}
+
+		funcType := reflect.TypeOf(v.smellNode)
+		nodeType := funcType.In(1)
+		if nodeType == nil {
+			panic("AST Visitor function signature does not have the right format")
+		}
+		expectedType := fmt.Sprintf("%T", node)
+		obtainedType := nodeType.String()
+
+		// If the type of node ast.Walk is visiting matches the type of node
+		// in the astVisitor func, call the func with the node.
+		if obtainedType == expectedType {
+
+			// set review funcs
+			r.smellDoneWithFile = func() {
+				v.fileDone[r.File().Filename()] = true
 			}
-			expectedType := fmt.Sprintf("%T", node)
-			obtainedType := nodeType.String()
 
-			// If the type of node ast.Walk is visiting matches the type of node
-			// in the astVisitor func, call the func with the node.
-			if obtainedType == expectedType {
+			r.smellDone = func() {
+				v.done = true
+			}
 
-				if !nodeInDiff(file.(BaseFile), node) {
-					return
+			// why doesn't type conversion work? Does it work in later versions of Go?
+			// wish this worked: visitorFunc.(func(Review, ast.Node))(r, node)
+			f := reflect.ValueOf(v.smellNode)
+			rV := reflect.ValueOf(r)
+			nodeV := reflect.ValueOf(node)
+			refV := f.Call([]reflect.Value{rV, nodeV})
+			if len(refV) > 0 {
+				if err := refV[0].Interface(); err != nil {
+					b := r.baseTenet()
+					b.SendError(err.(error))
 				}
-
-				// set review funcs
-				r.smellDoneWithFile = func() {
-					visitor.fileDone[r.File().Filename()] = true
-				}
-
-				r.smellDone = func() {
-					visitor.done = true
-				}
-
-				// why doesn't type conversion work? Does it work in later versions of Go?
-				// wish this worked: visitorFunc.(func(Review, ast.Node))(r, node)
-				f := reflect.ValueOf(visitor.smellNode)
-				rV := reflect.ValueOf(r)
-				nodeV := reflect.ValueOf(node)
-				r := f.Call([]reflect.Value{rV, nodeV})
-				if len(r) > 0 {
-					if err := r[0].Interface(); err != nil {
-						b.SendError(err.(error))
-					}
-				}
-				return
 			}
 			return
 		}
-		for _, visitor := range visitors {
-			if visitor.isSmellDone() || visitor.isSmellDoneWithFile(fName) {
-				continue
-			}
-			visitNode(visitor)
-		}
 		return v
 	}
-	return v
+	ast.Walk(v, r.File().AST())
 }
 
 func nodeInDiff(f BaseFile, node ast.Node) bool {

@@ -30,10 +30,26 @@ type Base struct {
 	// tmpdir is the dir for tenets to work in.
 	tmpdir string
 
-	astVisitors  []astVisitor
-	lineVisitors []lineVisitor
+	astVisitors  astVisitors
+	lineVisitors lineVisitors
 
 	info *Info
+}
+
+type astVisitors []astVisitor
+
+func (p *astVisitors) deleteRange(a, z int) {
+	s := *p
+	s = append(s[:a], s[z+1:]...)
+	*p = s
+}
+
+type lineVisitors []lineVisitor
+
+func (p *lineVisitors) deleteRange(a, z int) {
+	s := *p
+	s = append(s[:a], s[z+1:]...)
+	*p = s
 }
 
 // base allows us to access the base struct when it's embeded in another

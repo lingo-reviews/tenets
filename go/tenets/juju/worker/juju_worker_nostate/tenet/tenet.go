@@ -50,8 +50,8 @@ More info here: https://github.com/juju/juju/wiki/Guidelines-for-writing-workers
 			!astutil.UsesImport(astFile, "github.com/juju/juju/worker") {
 			// This file will no longer be smelt by this tenet.
 			r.FileDone()
-		} else {
 		}
+
 		return nil
 	})
 
