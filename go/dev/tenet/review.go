@@ -113,6 +113,7 @@ func (r *review) Issues() chan *Issue {
 // check cannot be called async as we set r.file on the review pointer. This
 // has to remain until we've finished walking.
 func (r *review) check(f File) error {
+	log.Printf("checking file %s", f.Filename())
 	// set current file being reviewed.
 	r.file = f
 	b := r.baseTenet()
