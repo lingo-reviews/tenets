@@ -34,15 +34,18 @@ func (s *slasherSuite) TestExampleFiles(c *gc.C) {
 			Filename: "example/demo.go",
 			Text:     "//first comment",
 			Comment:  "You need a space after the '//'",
+			Metrics:  map[string]interface{}{"confidence": 0.9},
 		},
 		{
 			Filename: "example/demo.go",
 			Text:     "//second comment",
 			Comment:  "Here needs a space also.",
+			Metrics:  map[string]interface{}{"confidence": 0.9},
 		}, {
 			Filename: "example/demo.go",
 			Text:     "//third comment",
 			Comment:  "And so on, please always have a space.",
+			Metrics:  map[string]interface{}{"confidence": 0.9},
 		},
 	}
 

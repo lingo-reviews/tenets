@@ -215,6 +215,12 @@ func sameIdent(a, b *ast.Ident) bool {
 		return false
 	}
 
+	// TODO(waigani) this happens if ident decl is outside of current
+	// file. We need to use the FileSet to find it.
+	if a.Obj == nil && b.Obj == nil {
+		return true
+	}
+
 	pa, err := declPos(a)
 	if err != nil {
 		// TODO(waigani) log error
@@ -236,9 +242,18 @@ func sameIdent(a, b *ast.Ident) bool {
 
 // returns the possition the ident was declared
 func declPos(n *ast.Ident) (int, error) {
+	if n.Obj == nil {
+		// TODO(waigani) this happens if ident decl is outside of current
+		// file. We need to use the FileSet to find it.
+		return 0, errors.New("ident object is nil")
+	}
+
 	switch t := n.Obj.Decl.(type) {
 	case *ast.AssignStmt:
-		return int(t.TokPos), nil
+		if t.TokPos.IsValid() {
+			return int(t.TokPos), nil
+		}
+		return 0, errors.New("token not valid")
 	case *ast.ValueSpec:
 		if len(t.Names) == 0 {
 			return 0, errors.New("decl statement has no names")
@@ -253,6 +268,11 @@ func declPos(n *ast.Ident) (int, error) {
 }
 
 func declaredWithCompLit(ident *ast.Ident) bool {
+	// TODO(waigani) decl is outside current file. Assume no.
+	if ident.Obj == nil {
+		return false
+	}
+
 	switch n := ident.Obj.Decl.(type) {
 	case *ast.AssignStmt:
 

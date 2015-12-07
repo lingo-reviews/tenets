@@ -37,6 +37,7 @@ func (s *suite) TestForLoop(c *gc.C) {
 
 	files := []string{
 		"example/bad_test.go",
+		"/home/jesse/go/src/github.com/juju/charm/meta_test.go",
 	}
 
 	expectedIssues := []tt.ExpectedIssue{
