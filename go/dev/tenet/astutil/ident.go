@@ -39,7 +39,7 @@ func SameIdent(a, b *ast.Ident) bool {
 	return true
 }
 
-// Continue here
+// IdentDeclExpr returns the expression that the identifier was declared with.
 func IdentDeclExpr(ident *ast.Ident) (ast.Expr, error) {
 
 	if ident.Obj == nil {
