@@ -56,7 +56,7 @@ import (
 )
 
 func main() {
-server.Serve(&tenet.Base{})
+	server.Serve(&tenet.Base{})
 }
 ```
 
