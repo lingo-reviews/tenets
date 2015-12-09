@@ -77,7 +77,7 @@ docker search lingoreviews
 lingo add lingoreviews/simpleseed
 
 # Pull down the images from hub.docker.com:
-lingo pull
+lingo pull --all
 
 # If you didn't pull, review will do it for you.
 
