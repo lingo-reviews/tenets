@@ -1,0 +1,6 @@
+language = "go"
+owner = "lingoreviews"
+name = "exhaustive_switch"
+
+[docker]
+  overwrite_dockerfile=true

@@ -1,6 +1,6 @@
 language = "go"
 owner = "lingoreviews"
-name = "juju_worker_nonakedchan"
+name = "juju_worker_simple"
 registry = "hub.docker.com"
 
 

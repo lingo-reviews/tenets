@@ -1,0 +1,21 @@
+cascade = true
+include = "*"
+template = ""
+
+[[tenet_group]]
+  name = "default"
+  template = ""
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/unused_arg"
+    driver = "binary"
+    registry = ""
+    tag = ""
+    [tenet_group.tenet.options]
+
+  [[tenet_group.tenet]]
+    name = "lingoreviews/exhaustive_switch"
+    driver = "binary"
+    registry = "hub.docker.com"
+    tag = ""
+    [tenet_group.tenet.options]

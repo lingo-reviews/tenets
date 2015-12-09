@@ -4,11 +4,12 @@
 package tenet
 
 import (
-	"errors"
 	"go/ast"
 	"strings"
 
+	"github.com/juju/errors"
 	"github.com/lingo-reviews/tenets/go/dev/tenet"
+	"github.com/lingo-reviews/tenets/go/dev/tenet/astutil"
 )
 
 type assertLoopLenTenet struct {
@@ -97,7 +98,12 @@ Again, need to assert result of {{.looped}} first.`[1:], tenet.DefaultComment),
 			return nil
 		}
 
-		if declaredWithCompLit(ident) {
+		isCompLit, err := astutil.DeclaredWithLit(ident)
+		if err != nil {
+			return errors.Trace(err)
+		}
+
+		if isCompLit {
 			// The var has been constructed in this file, so it is clear
 			// to see it's length. We are no longer interested in it.
 			ranged.remove(ident)
@@ -176,7 +182,7 @@ func (p *possibleBadRange) has(n *ast.Ident) bool {
 
 		// TODO(waigani) compare on more than name. We can't use pointer
 		// addresses as they change per smell ast walk.
-		if sameIdent(asserted, n) {
+		if astutil.SameIdent(asserted, n) {
 			return true
 		}
 	}
@@ -196,7 +202,7 @@ func (p *possibleBadRange) remove(n *ast.Ident) {
 
 		// TODO(waigani) compare on more than name. We can't use pointer
 		// addresses as they change per smell ast walk.
-		if !sameIdent(ident, n) {
+		if !astutil.SameIdent(ident, n) {
 			nv = append(nv, ident)
 		}
 	}
@@ -206,101 +212,6 @@ func (p *possibleBadRange) remove(n *ast.Ident) {
 
 func (p *possibleBadRange) empty() bool {
 	return len(*p) == 0
-}
-
-func sameIdent(a, b *ast.Ident) bool {
-	// TODO(waigani) Don't rely on name, it could change and still be the same
-	// ident.
-	if a.String() != b.String() {
-		return false
-	}
-
-	pa, err := declPos(a)
-	if err != nil {
-		// TODO(waigani) log error
-		return false
-	}
-
-	pb, err := declPos(b)
-	if err != nil {
-		// TODO(waigani) log error
-		return false
-	}
-
-	if pa != pb {
-		return false
-	}
-
-	return true
-}
-
-// returns the possition the ident was declared
-func declPos(n *ast.Ident) (int, error) {
-	switch t := n.Obj.Decl.(type) {
-	case *ast.AssignStmt:
-		return int(t.TokPos), nil
-	case *ast.ValueSpec:
-		if len(t.Names) == 0 {
-			return 0, errors.New("decl statement has no names")
-		}
-		// Even if this is not the name of the ident, it is in the same decl
-		// statement. We are interested in the pos of the decl statement.
-		return int(t.Names[0].NamePos), nil
-	default:
-		// TODO(waigani) log
-	}
-	return 0, errors.New("could not get declaration position")
-}
-
-func declaredWithCompLit(ident *ast.Ident) bool {
-	switch n := ident.Obj.Decl.(type) {
-	case *ast.AssignStmt:
-
-		// find position of ident on lhs of assignment
-		var identPos int
-		for i, exp := range n.Lhs {
-			if a, ok := exp.(*ast.Ident); ok && a.String() == ident.String() {
-				identPos = i
-				break
-			}
-		}
-
-		// get the rhs counterpart
-		switch x := n.Rhs[identPos].(type) {
-		case *ast.CompositeLit:
-			return true
-		case *ast.CallExpr:
-			if f, ok := x.Fun.(*ast.Ident); ok {
-				if f.Name == "make" {
-					return true
-				}
-			}
-		default:
-			// TODO(waigani) log
-		}
-	case *ast.ValueSpec:
-
-		if len(n.Values) == 0 {
-			return false
-		}
-
-		// find position of ident on lhs of assignment
-		var identPos int
-		for i, name := range n.Names {
-			if name.String() == ident.String() {
-				identPos = i
-			}
-		}
-
-		// get the rhs counterpart
-		switch n.Values[identPos].(type) {
-		case *ast.CompositeLit:
-			return true
-		}
-	default:
-		// TODO(waigani) log
-	}
-	return false
 }
 
 // TODO(waigani) check for assetCustom(c) type funcs within the loop

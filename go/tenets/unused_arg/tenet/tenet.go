@@ -24,7 +24,10 @@ func New() *unusedArgTenet {
 	confidence := t.RegisterMetric("confidence")
 	issue := t.RegisterIssue("unused_func_arg",
 		// TODO(waigani) "Argument{s} {args} {is_are} not used in the function's body."
-		tenet.AddComment(`{{.args}} used`),
+		tenet.AddComment(`{{.args}} used. If this is intentional, please change the name to "_".`, tenet.FirstComment),
+		tenet.AddComment(`{{.args}} used. Please remove or set the name to "_".`, tenet.SecondComment),
+		tenet.AddComment(`{{.args}} used. Set to "_" or remove.`, tenet.ThirdComment),
+		tenet.AddComment(`{{.args}} used. You get the idea ...`, tenet.FourthComment),
 	)
 
 	t.SmellNode(func(r tenet.Review, fnc *ast.FuncDecl) error {
@@ -38,7 +41,10 @@ func New() *unusedArgTenet {
 		}
 		for _, arg := range args {
 			for _, ident := range arg.Names {
-				v.args[ident.Name] = true
+				n := ident.Name
+				if n != "" && n != "_" {
+					v.args[n] = true
+				}
 			}
 		}
 		ast.Walk(v, fnc.Body)
