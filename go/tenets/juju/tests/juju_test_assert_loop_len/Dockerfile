@@ -10,7 +10,7 @@ ENV LINGO_CONTAINER true
 # copied below.
 
 COPY . /go/src/github.com/lingo-reviews
-COPY tenets/go/tenets/juju/worker/juju_worker_simple /go/src/app
+COPY tenets/go/tenets/juju/tests/juju_test_assert_loop_len /go/src/app
 WORKDIR /go/src/app
 RUN go get -v -d
 RUN go install -v
@@ -18,4 +18,4 @@ ENTRYPOINT /go/bin/app
 ## ----------
 
 # This info is used for searching for tenet images.
-LABEL reviews.lingo.name="lingoreviews/juju_worker_simple" \
+LABEL reviews.lingo.name="lingoreviews/juju_test_assert_loop_len" \

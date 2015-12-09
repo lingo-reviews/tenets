@@ -274,7 +274,9 @@ func (v *astVisitor) isSmellDoneWithFile(filename string) bool {
 func (r *review) walkAST(v *astVisitor) {
 	v.visit = func(node ast.Node) (w ast.Visitor) {
 		file := r.File()
-		if node == nil || v.isSmellDone() || !nodeInDiff(file.(BaseFile), node) {
+		// TODO(waigani) quick hack to get diff working. Come back and work out what's going on with diff?
+		if node == nil || v.isSmellDone() { // || !nodeInDiff(file.(BaseFile), node)
+			log.Println("skipping node ")
 			// Keep walking other nodes.
 			return w
 		}
