@@ -96,6 +96,3 @@ message SchemaVersion {
 	// Really we just need a string lit here. Is that possible?
 	enum version {V000 = 0;}
 }
-
-
-	
