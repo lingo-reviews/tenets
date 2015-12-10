@@ -1,6 +1,7 @@
 // Copyright 3Roosters Ltd.
 
 // To generate Go code: protoc apiV0.0.0.proto --go_out=plugins=grpc:api
+// To generate Python code: protoc -I ./ --python_out=python/dev/api --plugin=protoc-gen-grpc=`which grpc_python_plugin` api.proto
 
 syntax = "proto3";
 
@@ -95,6 +96,3 @@ message SchemaVersion {
 	// Really we just need a string lit here. Is that possible?
 	enum version {V000 = 0;}
 }
-
-
-	
