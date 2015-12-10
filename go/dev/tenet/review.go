@@ -338,7 +338,7 @@ func nodeInDiff(f BaseFile, node ast.Node) bool {
 	}
 
 	for i := start.Line; i <= end.Line; i++ {
-		if lineInDiff(diff, int64(start.Line)) {
+		if lineInDiff(diff, int64(i)) {
 			return true
 		}
 	}

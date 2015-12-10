@@ -176,16 +176,33 @@ func FuncResults(ident *ast.Ident) ([]*ast.Field, error) {
 	}
 
 	if funcDecl, ok := ident.Obj.Decl.(*ast.FuncDecl); ok {
+		if funcDecl.Type.Results == nil {
+			return nil, nil
+		}
 		return funcDecl.Type.Results.List, nil
 	}
 
 	return nil, errors.New("could not get func results")
 }
 
+func IsInterface(ident *ast.Ident) bool {
+	if ident.Obj != nil {
+		switch ident.Obj.Decl.(type) {
+		case *ast.TypeSpec:
+			return true
+		}
+	}
+	return false
+}
+
 // Returns a string representation of the identifier's type.
 func TypeOf(ident *ast.Ident) (string, error) {
 
 	switch n := ident.Obj.Decl.(type) {
+
+	// TODO(waigani) handle type spec decl
+	// case *ast.TypeSpec:
+
 	case *ast.AssignStmt:
 		expr, err := IdentDeclExpr(ident)
 		if err != nil {
