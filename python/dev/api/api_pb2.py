@@ -615,4 +615,208 @@ DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\020io.grpc.examples\242\002\003HLW'))
 _ISSUE_METRICSENTRY.has_options = True
 _ISSUE_METRICSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
+import abc
+from grpc.beta import implementations as beta_implementations
+from grpc.early_adopter import implementations as early_adopter_implementations
+from grpc.framework.alpha import utilities as alpha_utilities
+from grpc.framework.common import cardinality
+from grpc.framework.interfaces.face import utilities as face_utilities
+class EarlyAdopterTenetServicer(object):
+  """<fill me in later!>"""
+  __metaclass__ = abc.ABCMeta
+  @abc.abstractmethod
+  def Review(self, request_iterator, context):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def GetInfo(self, request, context):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def APIVersion(self, request, context):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def Configure(self, request, context):
+    raise NotImplementedError()
+class EarlyAdopterTenetServer(object):
+  """<fill me in later!>"""
+  __metaclass__ = abc.ABCMeta
+  @abc.abstractmethod
+  def start(self):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def stop(self):
+    raise NotImplementedError()
+class EarlyAdopterTenetStub(object):
+  """<fill me in later!>"""
+  __metaclass__ = abc.ABCMeta
+  @abc.abstractmethod
+  def Review(self, request_iterator):
+    raise NotImplementedError()
+  Review.async = None
+  @abc.abstractmethod
+  def GetInfo(self, request):
+    raise NotImplementedError()
+  GetInfo.async = None
+  @abc.abstractmethod
+  def APIVersion(self, request):
+    raise NotImplementedError()
+  APIVersion.async = None
+  @abc.abstractmethod
+  def Configure(self, request):
+    raise NotImplementedError()
+  Configure.async = None
+def early_adopter_create_Tenet_server(servicer, port, private_key=None, certificate_chain=None):
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  method_service_descriptions = {
+    "APIVersion": alpha_utilities.unary_unary_service_description(
+      servicer.APIVersion,
+      api_pb2.Nil.FromString,
+      api_pb2.SchemaVersion.SerializeToString,
+    ),
+    "Configure": alpha_utilities.unary_unary_service_description(
+      servicer.Configure,
+      api_pb2.Config.FromString,
+      api_pb2.Nil.SerializeToString,
+    ),
+    "GetInfo": alpha_utilities.unary_unary_service_description(
+      servicer.GetInfo,
+      api_pb2.Nil.FromString,
+      api_pb2.Info.SerializeToString,
+    ),
+    "Review": alpha_utilities.stream_stream_service_description(
+      servicer.Review,
+      api_pb2.File.FromString,
+      api_pb2.Issue.SerializeToString,
+    ),
+  }
+  return early_adopter_implementations.server("api.Tenet", method_service_descriptions, port, private_key=private_key, certificate_chain=certificate_chain)
+def early_adopter_create_Tenet_stub(host, port, metadata_transformer=None, secure=False, root_certificates=None, private_key=None, certificate_chain=None, server_host_override=None):
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  method_invocation_descriptions = {
+    "APIVersion": alpha_utilities.unary_unary_invocation_description(
+      api_pb2.Nil.SerializeToString,
+      api_pb2.SchemaVersion.FromString,
+    ),
+    "Configure": alpha_utilities.unary_unary_invocation_description(
+      api_pb2.Config.SerializeToString,
+      api_pb2.Nil.FromString,
+    ),
+    "GetInfo": alpha_utilities.unary_unary_invocation_description(
+      api_pb2.Nil.SerializeToString,
+      api_pb2.Info.FromString,
+    ),
+    "Review": alpha_utilities.stream_stream_invocation_description(
+      api_pb2.File.SerializeToString,
+      api_pb2.Issue.FromString,
+    ),
+  }
+  return early_adopter_implementations.stub("api.Tenet", method_invocation_descriptions, host, port, metadata_transformer=metadata_transformer, secure=secure, root_certificates=root_certificates, private_key=private_key, certificate_chain=certificate_chain, server_host_override=server_host_override)
+
+class BetaTenetServicer(object):
+  """<fill me in later!>"""
+  __metaclass__ = abc.ABCMeta
+  @abc.abstractmethod
+  def Review(self, request_iterator, context):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def GetInfo(self, request, context):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def APIVersion(self, request, context):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def Configure(self, request, context):
+    raise NotImplementedError()
+
+class BetaTenetStub(object):
+  """The interface to which stubs will conform."""
+  __metaclass__ = abc.ABCMeta
+  @abc.abstractmethod
+  def Review(self, request_iterator, timeout):
+    raise NotImplementedError()
+  @abc.abstractmethod
+  def GetInfo(self, request, timeout):
+    raise NotImplementedError()
+  GetInfo.future = None
+  @abc.abstractmethod
+  def APIVersion(self, request, timeout):
+    raise NotImplementedError()
+  APIVersion.future = None
+  @abc.abstractmethod
+  def Configure(self, request, timeout):
+    raise NotImplementedError()
+  Configure.future = None
+
+def beta_create_Tenet_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  request_deserializers = {
+    ('api.Tenet', 'APIVersion'): api_pb2.Nil.FromString,
+    ('api.Tenet', 'Configure'): api_pb2.Config.FromString,
+    ('api.Tenet', 'GetInfo'): api_pb2.Nil.FromString,
+    ('api.Tenet', 'Review'): api_pb2.File.FromString,
+  }
+  response_serializers = {
+    ('api.Tenet', 'APIVersion'): api_pb2.SchemaVersion.SerializeToString,
+    ('api.Tenet', 'Configure'): api_pb2.Nil.SerializeToString,
+    ('api.Tenet', 'GetInfo'): api_pb2.Info.SerializeToString,
+    ('api.Tenet', 'Review'): api_pb2.Issue.SerializeToString,
+  }
+  method_implementations = {
+    ('api.Tenet', 'APIVersion'): face_utilities.unary_unary_inline(servicer.APIVersion),
+    ('api.Tenet', 'Configure'): face_utilities.unary_unary_inline(servicer.Configure),
+    ('api.Tenet', 'GetInfo'): face_utilities.unary_unary_inline(servicer.GetInfo),
+    ('api.Tenet', 'Review'): face_utilities.stream_stream_inline(servicer.Review),
+  }
+  server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
+  return beta_implementations.server(method_implementations, options=server_options)
+
+def beta_create_Tenet_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  import api_pb2
+  request_serializers = {
+    ('api.Tenet', 'APIVersion'): api_pb2.Nil.SerializeToString,
+    ('api.Tenet', 'Configure'): api_pb2.Config.SerializeToString,
+    ('api.Tenet', 'GetInfo'): api_pb2.Nil.SerializeToString,
+    ('api.Tenet', 'Review'): api_pb2.File.SerializeToString,
+  }
+  response_deserializers = {
+    ('api.Tenet', 'APIVersion'): api_pb2.SchemaVersion.FromString,
+    ('api.Tenet', 'Configure'): api_pb2.Nil.FromString,
+    ('api.Tenet', 'GetInfo'): api_pb2.Info.FromString,
+    ('api.Tenet', 'Review'): api_pb2.Issue.FromString,
+  }
+  cardinalities = {
+    'APIVersion': cardinality.Cardinality.UNARY_UNARY,
+    'Configure': cardinality.Cardinality.UNARY_UNARY,
+    'GetInfo': cardinality.Cardinality.UNARY_UNARY,
+    'Review': cardinality.Cardinality.STREAM_STREAM,
+  }
+  stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
+  return beta_implementations.dynamic_stub(channel, 'api.Tenet', cardinalities, options=stub_options)
 # @@protoc_insertion_point(module_scope)
