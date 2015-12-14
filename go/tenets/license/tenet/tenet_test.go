@@ -31,6 +31,8 @@ const (
 	comment3 = "And so on, license header again."
 )
 
+var metrics map[string]interface{} = map[string]interface{}{"confidence": 0.7}
+
 func Test(t *testing.T) {
 	gc.TestingT(t)
 }
@@ -83,15 +85,18 @@ func (s *licenseSuite) TestExampleFiles(c *gc.C) {
 			Filename: "example/file1.go",
 			Text:     "// file1 this should be a license header.",
 			Comment:  comment1,
+			Metrics:  metrics,
 		},
 		{
 			Filename: "example/file2.go",
 			Text:     "// file2 this should be a license header.",
 			Comment:  comment2,
+			Metrics:  metrics,
 		}, {
 			Filename: "example/file3.go",
 			Text:     "// file3 this should be a license header.",
 			Comment:  comment3,
+			Metrics:  metrics,
 		},
 	}
 
@@ -110,6 +115,7 @@ package main
 	expected := tt.ExpectedIssue{
 		Text:    "// Copyright 2015 Jesse Meek.",
 		Comment: comment1,
+		Metrics: metrics,
 	}
 
 	s.CheckSRC(c, src, expected)
@@ -125,5 +131,6 @@ package main
 	s.CheckSRC(c, src, tt.ExpectedIssue{
 		Text:    "// not a license header",
 		Comment: comment1,
+		Metrics: metrics,
 	})
 }
