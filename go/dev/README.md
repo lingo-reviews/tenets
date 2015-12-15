@@ -111,7 +111,7 @@ server.Serve(t)
 ```
 
 This will raise an issue for every non-awesome comment, with the default
-message "Issue Found". To set the message:
+message "Issue Found". http://goast.yuroyoro.net is a useful tool to help you find the node you're interested in.  To set the message:
 
 ```go
 t.RegisterIssue("sucky_comment", tenet.AddComment("this comment could be more awesome"))
