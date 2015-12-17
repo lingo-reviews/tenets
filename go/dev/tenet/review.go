@@ -275,10 +275,9 @@ func (r *review) walkAST(v *astVisitor) {
 	v.visit = func(node ast.Node) (w ast.Visitor) {
 		file := r.File()
 		// TODO(waigani) quick hack to get diff working. Come back and work out what's going on with diff?
-		if node == nil || v.isSmellDone() { // || !nodeInDiff(file.(BaseFile), node)
-			log.Println("skipping node ")
+		if node == nil || v.isSmellDone() || !nodeInDiff(file.(BaseFile), node) {
 			// Keep walking other nodes.
-			return w
+			return v
 		}
 
 		fName := file.Filename()
@@ -338,7 +337,7 @@ func nodeInDiff(f BaseFile, node ast.Node) bool {
 	}
 
 	for i := start.Line; i <= end.Line; i++ {
-		if lineInDiff(diff, int64(start.Line)) {
+		if lineInDiff(diff, int64(i)) {
 			return true
 		}
 	}
