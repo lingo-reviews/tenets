@@ -1,0 +1,7 @@
+language = "go"
+owner = "lingoreviews"
+name = "fif_line"
+
+[docker]
+  build=false
+  overwrite_dockerfile=true
