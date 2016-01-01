@@ -1,4 +1,4 @@
-simpleseed is a fully functional tenet written in 29 lines of code. 
+simpleseed is a fully functional tenet written in under 40 lines of code. 
 
 The tenet itself asserts that "every comment should be awesome", with a rather
 arbitary definition of "awesome". It serves as an example of how simple it is
