@@ -1,4 +1,4 @@
-# LINGO REVIEWS ALPHA
+# LINGO  (ALPHA)
 
 ## House keeping
 
