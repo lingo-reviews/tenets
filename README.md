@@ -10,7 +10,7 @@ practice and ensures the documentation and implementation align with it.
 ### Go
 
 Currently Lingo has best support for Go. Start [here](https://github.com/lingo-reviews/tenets/tree/master/go/dev). The
-`go/tenets` directory has a variety of examples of tenets in Go which yu can copy to get started.
+`go/tenets` directory has a variety of examples of tenets in Go which you can copy to get started.
 
 ### Python
 
