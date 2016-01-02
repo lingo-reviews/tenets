@@ -1,4 +1,4 @@
-# LINGO TENETS
+# Lingo Tenets
 
 This is a repository of tenets used by the [Lingo tool](https://github.com/lingo-reviews/lingo) 
 to manage code and product quality. Each tenet captures a piece of best
