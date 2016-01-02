@@ -102,9 +102,9 @@ func (t *noStateTenet) smellFuncs() {
 					// positive.
 					if sym.Sel.Name == "State" {
 						r.RaiseNodeIssue(
-							t.maybeIssue,
+							t.mostLikelyIssue,
 							fnc,
-							t.confidence(0.3),
+							t.confidence(0.8),
 							t.observability,
 						)
 
@@ -118,9 +118,9 @@ func (t *noStateTenet) smellFuncs() {
 		// None of the func params imported state, but it is returning a
 		// worker. So raise an issue with less confidence.
 		r.RaiseNodeIssue(
-			t.mostLikelyIssue,
+			t.maybeIssue,
 			fnc,
-			t.confidence(0.8),
+			t.confidence(0.3),
 			t.observability,
 		)
 
