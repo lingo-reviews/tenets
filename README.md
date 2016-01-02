@@ -2,7 +2,7 @@
 
 This is a repository of tenets used by the [Lingo tool](https://github.com/lingo-reviews/lingo) 
 to manage code and product quality. Each tenet captures a piece of best
-practice and ensures documentation and implementation align with it.
+practice and ensures the documentation and implementation align with it.
 
 
 ## Writing a Tenet
