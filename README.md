@@ -19,7 +19,7 @@ you would like to help.
 
 ### Other languages
 
-The api.proto file in the root of this repoistory can be used to generate the
+The api.proto file in the root of this repository can be used to generate the
 tenet API libs in C, C++, Java, Go, Node.js, Python, Ruby, Objective-C, PHP
 and C#. Visit grpc.io to learn more.
 
