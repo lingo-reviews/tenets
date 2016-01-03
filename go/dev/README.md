@@ -6,15 +6,15 @@ Three packages are needed to run a Go tenet:
 
 ### api
 
-A tenet is a micro-service which talks to lingo over RPC. The api package is
+A tenet is a micro-service which talks to Lingo over RPC. The api package is
 the RPC API. This is the low level transport code generated from api.proto
-which enables lingo to talk to the tenet. As a tenet author, you can safely
+which enables Lingo to talk to the tenet. As a tenet author, you can safely
 ignore it.
 
 ### server
 
 The server package takes a tenet object and serves it up as an RPC server that
-lingo can talk to. There is only one method from the server package that you
+Lingo can talk to. There is only one method from the server package that you
 should need:
 
 ```go
@@ -60,7 +60,7 @@ func main() {
 }
 ```
 
-You could build and add this tenet to lingo, but it would do nothing. First,
+You could build and add this tenet to Lingo, but it would do nothing. First,
 define what this tenet's all about:
 
 ```go
@@ -131,8 +131,8 @@ issue := t.RegisterIssue("sucky_comment",
 
 ```
 
-The first time the issue is seen, lingo will comment "comments really should
-be awesome". Then, once every time the issue is found in a file, lingo will
+The first time the issue is seen, Lingo will comment "comments really should
+be awesome". Then, once every time the issue is found in a file, Lingo will
 comment "the comment in this file should also be more awesome".
 
 To set a variable in the comment:
@@ -181,8 +181,8 @@ Now the issue has been raised with a confidence score of 8 and a tag of
 lingo review --tags style,someOtherTag --metrics-higher-than confidence=5 --metrics-lower-than confidence=9
 ```
 
-This enables lingo to monitor a code base with fine grained control. You
-could, for example, encode the connascence princples (http://connascence.io).
+This enables Lingo to monitor a code base with fine grained control. You
+could, for example, encode the connascence principles (http://connascence.io).
 
 NOTE: In the closed Alpha you can register and raise metrics and tags - and
 they'll appear in the json output - but you cannot yet filter a review with
@@ -204,5 +204,4 @@ name = "simpleseed"
 ```
 
 Note: until github.com/lingo-reviews/tenets is published, you'll have to
-manually git clone the repository into ~/go/src/github.com/lingo-
-reviews/tenets before building a docker image.
+manually git clone the repository into ~/go/src/github.com/lingo-reviews/tenets before building a docker image.
