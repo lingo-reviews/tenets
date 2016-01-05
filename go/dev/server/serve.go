@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"runtime"
 
 	"google.golang.org/grpc"
 
@@ -50,7 +51,28 @@ func listener() (net.Listener, error) {
 	if os.Getenv("LINGO_CONTAINER") != "" {
 		return net.Listen("tcp", ":8000")
 	}
-	return localUnixListener()
+
+	switch runtime.GOOS {
+	case "darwin":
+		return localTcpListener()
+
+	case "linux", "freebsd":
+		return localUnixListener()
+
+	default:
+		panic("Unsupported OS.")
+	}
+}
+
+func localTcpListener() (net.Listener, error) {
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		return nil, errors.Trace(err)
+	}
+
+	fmt.Println(lis.Addr().String())
+
+	return lis, nil
 }
 
 func localUnixListener() (net.Listener, error) {
